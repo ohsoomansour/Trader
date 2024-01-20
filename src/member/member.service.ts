@@ -98,6 +98,7 @@ export class MemberService {
           name,
           address,
           memberRole,
+          
         }),
       );
       await this.verification.save(
@@ -204,6 +205,8 @@ export class MemberService {
         where: { id: id },
         cache: true,
       });
+      console.log('editProfile의 user:')
+      console.log(user);
       /* 변경 전 
       if (user) {
         user.userId = userId;
