@@ -23,7 +23,7 @@
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
-.env.dev 파일을 개인적으로 제공합니다!
+**23년 12월 18일 ~ 24년 1월 18일 commit은 repository 변경으로 누락**    
 
 ## Installation
 
