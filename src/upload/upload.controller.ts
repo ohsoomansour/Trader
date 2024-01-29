@@ -71,4 +71,6 @@ export class UploadController {
       return null;
     }
   }
+
+  //동영상 업로드
 }

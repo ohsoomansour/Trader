@@ -7,7 +7,7 @@ import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 //import { JwtMiddleware } from './jwt/jwt.middleware';
 //import { RedisIoAdapter } from './events/redis.adapter';
 
-/*#git 명령어
+/*#git 명령어   🌟
  git remote remove origin (기존 원격 저장소 삭제)
  git remote -v (원격 저장소 확인)
  git remote remove origin (리모트 저장소 삭제)
