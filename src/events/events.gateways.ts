@@ -231,11 +231,16 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       if (!this.roomUsers[userInfo.roomId]) {
         this.roomUsers[userInfo.roomId] = [];  //방의 아이디 값이 없으면 초기화 
       }
-      this.roomUsers[userInfo.roomId].push(userInfo.userName);
       
-      this.server.emit('userJoined', {
-        userList: this.roomUsers[userInfo.roomId]
-      })
+      if(this.roomUsers[userInfo.roomId].includes(userInfo.userName)) {
+        return;
+      } else {
+        this.roomUsers[userInfo.roomId].push(userInfo.userName);
+        this.server.emit('userJoined', {
+          userList: this.roomUsers[userInfo.roomId]
+        })
+      }
+     
       
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
       function formatCurrentTime(): string {
@@ -295,14 +300,14 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       //#각 메세지에 '***'를 포함하고 있을 때 카운트 +1 > 3회 이상은 레드카드 주고 얼려버린다!
       if(this.chatService.checkProfanity(filteredMessage)) {
         if(!this.count){
-          this.count = 0;
+          this.count = 0; 
         }
         this.count += 1;
         if( this.count >= 3 ){
           client.emit('message', new ProfanityFilterPipe().transform(messages[0]) );
         }
       }
-      const msgObj: object = { msg: filteredMessage+'  '+`${currentTime}`, img: messages[1] };
+      const msgObj: object = { msg: filteredMessage, url: messages[1], time: `${currentTime}` };
       client.emit('message', msgObj ); 
     } catch (e) {
       this.logger.error(`messages의 자료 타입을 확인하세요.`);
