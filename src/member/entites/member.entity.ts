@@ -71,13 +71,14 @@
 
 
 import { CoreEntity } from 'src/common/entites/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm'; 
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm'; 
 import * as bcrypt from "bcrypt";
 import { InternalServerErrorException } from '@nestjs/common';
 import { registerEnumType } from '@nestjs/graphql';
-//import { Field, registerEnumType } from '@nestjs/graphql';
+import { Deal } from 'src/deals/entitles/deal.entity';
+import { Order } from 'src/orders/entities/order.entity';
 
-/**/
+
 export enum MemberRole {
   admin = "admin",
   manager = "manager",
@@ -113,6 +114,25 @@ export class Member extends CoreEntity {
 
   @Column({nullable : true})
   verified: boolean;
+
+  @OneToMany(
+    () => Deal,
+    deal => deal.seller
+  )
+  deal: Deal[];
+  
+  @OneToMany(
+    () => Order,
+    oreders => oreders
+  )
+  orders:Order[]
+
+  @OneToMany(
+    () => Order,
+    orders => orders.customer
+  )
+  order:Order;
+
 
   @BeforeInsert() //@explain:최초 삽입 시, (값이 없을 때) 아래의 method를 호출
   @BeforeUpdate() //@explain: 최초 삽입 후 두 번째 Update부터 아래의 method를 호출이다. 

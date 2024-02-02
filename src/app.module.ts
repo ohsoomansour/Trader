@@ -83,6 +83,12 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 //import { JwtModule } from '@nestjs/jwt';
 import { UploadModule } from './upload/upload.module';
 import { Verification } from './member/entites/verification.entity';
+import { Deal } from './deals/entitles/deal.entity';
+import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
+import { DealModule } from './deals/deal.module';
+import { Robot } from './deals/entitles/robot.entity';
+
 
 @Module({
   imports: [
@@ -108,7 +114,7 @@ import { Verification } from './member/entites/verification.entity';
       database: process.env.DB_NAME,
       synchronize: true,
       logging: true,
-      entities: [Member, Verification], //[join(__dirname, '/**/*.entity.ts')]
+      entities: [Member, Verification, Deal, Order, OrderItem, Robot], //[join(__dirname, '/**/*.entity.ts')]
     }),
     MemberModule,
     AdminModule,
@@ -118,6 +124,7 @@ import { Verification } from './member/entites/verification.entity';
       privateKey: process.env.JWT_SECRET,
     }),
     UploadModule,
+    DealModule
     /*#JwtModule등록 방법2.
     JwtModule.registerAsync({
       imports: [ConfigModule],
