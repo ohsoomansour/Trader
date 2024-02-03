@@ -4,17 +4,18 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { DealService } from "./deal.service";
 import { Role } from "src/auth/role.decorator";
 
-@Controller('/deal')
+
+@Controller('/seller')
 export class DealController {
   constructor(private dealService: DealService) {
     this.dealService = dealService;
   }
 
   @Role(['any'])
-  @Post()
+  @Post('/make-deal')
   makeADeal(
-    @Body() dealInfo
+    @Body() {seller, robot} 
   ){
-    return this.dealService.makeADeal(dealInfo)
+    return this.dealService.makeADeal(seller, robot)
   }
 }

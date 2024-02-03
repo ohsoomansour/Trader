@@ -22,6 +22,4 @@ export class Robot extends CoreEntity{
   @Column({nullable:true})
   rb_glbURL: string;
 
-  
-  
 }

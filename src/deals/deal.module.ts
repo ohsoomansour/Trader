@@ -5,11 +5,13 @@ import { Order } from 'src/orders/entities/order.entity';
 import { DealController } from './deal.controller';
 import { OrderItem } from 'src/orders/entities/order-item.entity';
 import { DealService } from './deal.service';
-import { Robot } from './entitles/robot.entity';
+
 import { Deal } from './entitles/deal.entity';
+import { Robot } from './entitles/robot.entity';
+import { Member } from 'src/member/entites/member.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order,OrderItem,Robot, Deal  ])],
+  imports: [TypeOrmModule.forFeature([Order, OrderItem, Robot, Deal, Member  ])],
   controllers:[DealController],
   providers: [DealService]
 })

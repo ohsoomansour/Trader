@@ -1,14 +1,22 @@
 /* eslint-disable prettier/prettier */
 
 import { CoreOutput } from "src/common/dtos/output.dto";
-import { Robot } from "../entitles/robot.entity";
-import { Member } from "src/member/entites/member.entity";
+
+/*
+export class Robot {
+  name:string;
+  price: number;
+  description: string;
+  rb_glbURL: string;
+}
+*/
 
 export class MakeADealInput  {
-  seller:Member;
-  deal_name: string;
-  description:string;
-  robot:Robot;
+  seller:string;
+  name:string;
+  price: number;
+  description: string;
+  rb_glbURL: string;
 }
 
 export class MakeADealOutput extends CoreOutput {
