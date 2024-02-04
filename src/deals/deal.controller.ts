@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { DealService } from "./deal.service";
 import { Role } from "src/auth/role.decorator";
 
@@ -17,5 +17,10 @@ export class DealController {
     @Body() {seller, robot} 
   ){
     return this.dealService.makeADeal(seller, robot)
+  }
+
+  @Get('/getallDeals')
+  getAllDeals() {
+    return this.dealService.getAllDeal();
   }
 }

@@ -38,4 +38,14 @@ export class DealService {
 
   }
 
+  async getAllDeal() {
+    const allDeals = await this.deals.find({
+      order: {
+        id: 'DESC',
+      },
+      cache:true,
+    })
+    return allDeals;
+  }
+
 }
