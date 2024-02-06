@@ -4,9 +4,7 @@ import { AppModule } from './app.module';
 import * as session from 'express-session'; //세션
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
-//import { JwtMiddleware } from './jwt/jwt.middleware';
-//import { RedisIoAdapter } from './events/redis.adapter';
-
+import { urlencoded, json } from 'body-parser';
 /*#git 명령어   🌟
  git remote remove origin (기존 원격 저장소 삭제)
  git remote -v (원격 저장소 확인)
@@ -41,8 +39,9 @@ import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
       reject('failure reason')
     }
    })
-
+  
  */
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule); //반환: NestApplication instance
   app.useGlobalPipes(
@@ -59,12 +58,15 @@ async function bootstrap() {
     origin: true,
     credentials: true,
   });
+
   app.use(
     session({
       secret: 'SESSION_ID_SM', //세션아이디
       resave: false, //request 중에 세션이 수정되지 않아도 세션을 세션 저장소에 다시 저장하도록 강제
       saveUninitialized: false, //초기화되지 않는 세션을 저장하게 함
     }),
+    json({ limit: '50mb' }),
+    urlencoded({ limit: '50mb', extended: true }),
   );
   //app.use(JwtMiddleware);
 

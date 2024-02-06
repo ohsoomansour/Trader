@@ -88,6 +88,7 @@ import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
 import { DealModule } from './deals/deal.module';
 import { Robot } from './deals/entitles/robot.entity';
+import { DownloadModule } from './download/download.module';
 
 
 
@@ -125,6 +126,7 @@ import { Robot } from './deals/entitles/robot.entity';
       privateKey: process.env.JWT_SECRET,
     }),
     UploadModule,
+    DownloadModule,
     DealModule
     /*#JwtModule등록 방법2.
     JwtModule.registerAsync({

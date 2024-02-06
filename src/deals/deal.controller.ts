@@ -5,6 +5,7 @@ import { DealService } from "./deal.service";
 import { Role } from "src/auth/role.decorator";
 
 
+
 @Controller('/seller')
 export class DealController {
   constructor(private dealService: DealService) {
@@ -13,14 +14,24 @@ export class DealController {
 
   @Role(['any'])
   @Post('/make-deal')
-  makeADeal(
-    @Body() {seller, robot} 
+
+  async makeADeal(
+    @Body() {seller, name, price, description, rb3dURL}
   ){
-    return this.dealService.makeADeal(seller, robot)
+    
+    //console.log(seller, name, price, description);
+    return this.dealService.makeADeal(seller, name, price, description, rb3dURL)
   }
 
   @Get('/getallDeals')
   getAllDeals() {
     return this.dealService.getAllDeal();
   }
+  /*
+  @Get('/getRBmodel/:id')
+  getGlbModel(@Param() id){
+    
+    return;
+  }
+  */
 }

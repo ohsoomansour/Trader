@@ -18,8 +18,11 @@ export class Robot extends CoreEntity{
 
   @Column({nullable:true})
   description: string;
-
+  /*
+  @Column({nullable:true, type: 'bytea'})
+  rb3D_glb : Buffer;  
+  */
   @Column({nullable:true})
-  rb_glbURL: string;
+  rb3dURL : string;
 
 }

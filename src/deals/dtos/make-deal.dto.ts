@@ -16,7 +16,7 @@ export class MakeADealInput  {
   name:string;
   price: number;
   description: string;
-  rb_glbURL: string;
+  rgb3D_glb: string;
 }
 
 export class MakeADealOutput extends CoreOutput {

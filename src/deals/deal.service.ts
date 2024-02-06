@@ -21,14 +21,21 @@ export class DealService {
 
   async makeADeal(
     //robot entity가 등록이 되어있어야된다. (아래의 경우)
-    seller:string, robot: Robot
+    seller, name, price, description, rb3dURL
     
   ): Promise<void> {
     //seller는 회원의 정보에서 가져와서 기입 해줘야된다고 추정
     const sellMember = await this.members.findOne({where: {userId: seller}})
     //로봇 바로 save => findOne  
-    const newRobot = this.robots.create(robot);
+    const newRobot = this.robots.create({
+      name: name,
+      price: price,
+      description: description,
+      rb3dURL: rb3dURL
+    })
+    //const newRobot = this.robots.create(robot);
     await this.robots.save(newRobot);
+
     await this.deals.save(
       this.deals.create({
         seller: sellMember,
@@ -44,8 +51,19 @@ export class DealService {
         id: 'DESC',
       },
       cache:true,
+      relations:{
+        robot: true,
+      }
     })
     return allDeals;
   }
-
+  /*
+  async getGlbModel(){
+    const RBmodel = await this.robots.findOne({
+      where: {
+        id: 1
+      }
+    })
+  }
+ */
 }
