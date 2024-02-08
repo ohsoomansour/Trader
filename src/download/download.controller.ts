@@ -32,7 +32,7 @@ export class DownloadController {
       },
     });
     try {
-      //const objectTest = "1706965081463cuteRobot.glb";
+      //const objectTest = "1706965081463cuteRobot.glb"; 
       const result = 
         await new AWS.S3()
         .getObject({

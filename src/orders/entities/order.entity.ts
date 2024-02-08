@@ -2,7 +2,7 @@
 import { CoreEntity } from 'src/common/entites/core.entity';
 import { Deal } from 'src/deals/entitles/deal.entity';
 import { Member } from 'src/member/entites/member.entity';
-import { Column, Entity, ManyToMany, ManyToOne, OneToOne } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne} from "typeorm";
 import { OrderItem } from './order-item.entity';
 
 //택배조회 api, 결제 api(Naver), 
@@ -19,7 +19,7 @@ export enum OrderStatus  {
 
 @Entity()
 export class Order extends CoreEntity {
-  @OneToOne(
+  @ManyToOne(
     () => Deal,
     deal => deal.order
   )
@@ -38,6 +38,8 @@ export class Order extends CoreEntity {
   status: OrderStatus;
 
   @ManyToMany(() => OrderItem)
-  items: OrderItem[];
+  items: OrderItem;
   
+  @Column({nullable:true})
+  total: number;
 }

@@ -54,7 +54,8 @@ export class UploadController {
       },
     });
     try {
-      const objectName = `${Date.now() + file.originalname}`;
+      //const objectName = `${Date.now() + file.originalname}`;
+      const objectName = `${'_' + file.originalname}`;
       const regionName = 'ap-northeast-2';
       await new AWS.S3()
         .putObject({

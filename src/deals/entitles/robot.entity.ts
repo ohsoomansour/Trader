@@ -16,6 +16,9 @@ export class Robot extends CoreEntity{
   @Column({nullable:true})
   price: number;
 
+  @Column({nullable: true})
+  maintenance_cost: number;
+
   @Column({nullable:true})
   description: string;
   /*
@@ -23,6 +26,8 @@ export class Robot extends CoreEntity{
   rb3D_glb : Buffer;  
   */
   @Column({nullable:true})
-  rb3dURL : string;
+  rbURL : string;
 
+  
+    
 }

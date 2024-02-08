@@ -3,7 +3,7 @@ import { Length } from "class-validator";
 import { CoreEntity } from "src/common/entites/core.entity";
 import { Member } from "src/member/entites/member.entity";
 import { Order } from "src/orders/entities/order.entity";
-import {Entity, ManyToOne, OneToOne, RelationId } from "typeorm";
+import {Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
 import { Robot } from "./robot.entity";
 
 
@@ -40,7 +40,7 @@ export class Deal extends CoreEntity {
   @RelationId((deal: Deal) => deal.robot)
   robotId: number;
   
-  @OneToOne(
+  @OneToMany(
     () => Order,
     order => order.deal
   )

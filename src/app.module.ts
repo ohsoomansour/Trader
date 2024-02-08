@@ -89,6 +89,7 @@ import { OrderItem } from './orders/entities/order-item.entity';
 import { DealModule } from './deals/deal.module';
 import { Robot } from './deals/entitles/robot.entity';
 import { DownloadModule } from './download/download.module';
+import { OrderModule } from './orders/order.module';
 
 
 
@@ -127,6 +128,7 @@ import { DownloadModule } from './download/download.module';
     }),
     UploadModule,
     DownloadModule,
+    OrderModule,
     DealModule
     /*#JwtModule등록 방법2.
     JwtModule.registerAsync({

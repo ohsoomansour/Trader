@@ -16,11 +16,11 @@ export class DealController {
   @Post('/make-deal')
 
   async makeADeal(
-    @Body() {seller, name, price, description, rb3dURL}
+    @Body() {seller, name, price, description, maintenance_cost, rbURL}
   ){
     
     //console.log(seller, name, price, description);
-    return this.dealService.makeADeal(seller, name, price, description, rb3dURL)
+    return this.dealService.makeADeal(seller, name, price, maintenance_cost, description, rbURL)
   }
 
   @Get('/getallDeals')

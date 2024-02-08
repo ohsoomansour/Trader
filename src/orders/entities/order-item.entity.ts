@@ -17,5 +17,5 @@ export class OrderItem extends CoreEntity{
   robot: Robot;
 
   @Column({type: 'json', nullable: true} )
-  options: RobotOption[];
+  options: RobotOption;
 }
