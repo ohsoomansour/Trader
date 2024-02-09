@@ -55,7 +55,7 @@ export class OrderService {
             maintenance_cost: orderInput.items.maintenance_const,
           }
         },
-        total: orderInput.total
+        total: orderInput.total0
       })
       await this.orders.save(newOrder);
       

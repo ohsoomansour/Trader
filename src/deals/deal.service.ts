@@ -21,25 +21,26 @@ export class DealService {
 
   async makeADeal(
     //robot entity가 등록이 되어있어야된다. (아래의 경우)
-    seller, name, price, maintenance_cost, description, rbURL
+    compa_name, compaBrand_ImgURL, seller, name, price, maintenance_cost, description, rbURL
     
   ): Promise<void> {
     try {
-      //seller는 회원의 정보에서 가져와서 기입 해줘야된다고 추정
+
     const sellMember = await this.members.findOne({where: {userId: seller}})
-    //로봇 바로 save => findOne  
     const newRobot = this.robots.create({
-      name: name,
-      price: price,
-      maintenance_cost,
-      description: description,
-      rbURL: rbURL
+      name,
+      price,    
+      maintenance_cost,    //undefined
+      description,
+      rbURL
     })
-    //const newRobot = this.robots.create(robot);
+
     await this.robots.save(newRobot);
 
     await this.deals.save(
       this.deals.create({
+        compa_name, //undefined
+        compaBrand_ImgURL,
         seller: sellMember,
         robot: newRobot
       })

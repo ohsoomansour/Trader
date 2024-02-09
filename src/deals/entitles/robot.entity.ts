@@ -20,13 +20,15 @@ export class Robot extends CoreEntity{
   maintenance_cost: number;
 
   @Column({nullable:true})
-  description: string;
+  description:string;
   /*
   @Column({nullable:true, type: 'bytea'})
   rb3D_glb : Buffer;  
   */
   @Column({nullable:true})
   rbURL : string;
+
+  
 
   
     

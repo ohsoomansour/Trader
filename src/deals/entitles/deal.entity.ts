@@ -3,7 +3,7 @@ import { Length } from "class-validator";
 import { CoreEntity } from "src/common/entites/core.entity";
 import { Member } from "src/member/entites/member.entity";
 import { Order } from "src/orders/entities/order.entity";
-import {Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
+import {Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
 import { Robot } from "./robot.entity";
 
 
@@ -24,25 +24,31 @@ import { Robot } from "./robot.entity";
 
 @Entity()
 export class Deal extends CoreEntity {
+  @Column({nullable:true})
+  compa_name:string;
+
+  @Column({nullable: true})
+  compaBrand_ImgURL:string;
+
   @Length(3)
   @ManyToOne(
     () => Member,
-    member => member.deal
+    member => member.deal,
+    
   )
   seller: Member;
   @RelationId((deal:Deal) => deal.seller)
   sellerId: number;
-  //many to one
-  @ManyToOne(
-    () => Robot
-  )
+  //Robot가 삭제될 때 관련된 자식 엔티티(여기서는 Deal)도 함께 삭제
+  @ManyToOne(() => Robot, {onDelete: 'CASCADE'})
   robot: Robot;
   @RelationId((deal: Deal) => deal.robot)
   robotId: number;
   
   @OneToMany(
     () => Order,
-    order => order.deal
+    order => order.deal,
+    
   )
   order:Order;
   

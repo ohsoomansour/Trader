@@ -34,6 +34,9 @@ export class Order extends CoreEntity {
   @Column()
   address: string;
 
+  @Column({nullable:true})
+  description: string;
+
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending})
   status: OrderStatus;
 
