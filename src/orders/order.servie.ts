@@ -6,6 +6,8 @@ import { Repository } from "typeorm";
 import { OrderOutputDTO } from "./dtos/order.dto";
 import { Member } from "src/member/entites/member.entity";
 import { Deal } from "src/deals/entitles/deal.entity";
+import { Robot } from "src/deals/entitles/robot.entity";
+import { OrderItem } from "./entities/order-item.entity";
 
 export enum OrderStatus  {
   Pending = "Pending",
@@ -26,36 +28,40 @@ export class OrderService {
     private readonly deals: Repository<Deal>,
     @InjectRepository(Member)
     private readonly members: Repository<Member>,
+    @InjectRepository(Robot)
+    private readonly robots: Repository<Robot>,
+    @InjectRepository(OrderItem)
+    private readonly orderitems: Repository<OrderItem>,
   ){}
   //orderInput: OrderInput
   async makeaOrder(orderInput, customer: Member):Promise<OrderOutputDTO>{
     try{
+      //entity 
       const deal = await this.deals.findOne({
         where:{
           id: orderInput.dealId
         }
       })
-      /*2. member는
-      const customer = await this.members.findOne({
+      //아래는 엔티티가 아니다 따라서 
+      const robot = await this.robots.findOne({
         where:{
-          userId: orderInput.customer
+          id: orderInput.items.robot.id,
         }
       })
-      */
-  
+      //order_item도 새로운 entity를 만들어줘야지 
+      const orderitem = this.orderitems.create({
+        robot,
+        options: orderInput.items.options
+      },)
+      await this.orderitems.save(orderitem)
+
       const newOrder = this.orders.create({
         deal,
         customer,
         address: orderInput.address,
         status: OrderStatus.Pending, //서버에서 준비중 기본값 
-        items:{
-          robot: orderInput.items.robot,
-          options:{
-            maintenanceYN: orderInput.items.maintenanceYN,
-            maintenance_cost: orderInput.items.maintenance_const,
-          }
-        },
-        total: orderInput.total0
+        items:orderitem,
+        total: orderInput.total
       })
       await this.orders.save(newOrder);
       
@@ -66,7 +72,25 @@ export class OrderService {
       console.error(e);
       
     }
-    //1. 관계deal  찾아오고
+    /*order 가져올 때는 relation
+     async getAllDeal() {
+    try {
+      const allDeals = await this.deals.find({
+        order: {
+          id: 'DESC',
+        },
+        cache:true,
+        relations:{
+            robot: true,
+          }
+        })
+        return allDeals;
+      } catch (e) {
+      }
+    }
+    
+    */
+
   }
 
 }

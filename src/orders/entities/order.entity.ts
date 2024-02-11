@@ -2,7 +2,7 @@
 import { CoreEntity } from 'src/common/entites/core.entity';
 import { Deal } from 'src/deals/entitles/deal.entity';
 import { Member } from 'src/member/entites/member.entity';
-import { Column, Entity, ManyToMany, ManyToOne} from "typeorm";
+import { Column, Entity, ManyToOne} from "typeorm";
 import { OrderItem } from './order-item.entity';
 
 //택배조회 api, 결제 api(Naver), 
@@ -34,13 +34,14 @@ export class Order extends CoreEntity {
   @Column()
   address: string;
 
-  @Column({nullable:true})
-  description: string;
-
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending})
   status: OrderStatus;
+  //id를 가지고있는데 foreign key로 가지고 있음 -> find할 때 ! relations 조인이된다. 
+  @ManyToOne(
+    () => OrderItem,
+    (order_item) => order_item.order
+  )
 
-  @ManyToMany(() => OrderItem)
   items: OrderItem;
   
   @Column({nullable:true})

@@ -21,7 +21,7 @@ export class DealService {
 
   async makeADeal(
     //robot entity가 등록이 되어있어야된다. (아래의 경우)
-    compa_name, compaBrand_ImgURL, seller, name, price, maintenance_cost, description, rbURL
+    compa_name, compaBrand_ImgURL, seller, seller_address, name, price, maintenance_cost, description, rbURL
     
   ): Promise<void> {
     try {
@@ -40,6 +40,7 @@ export class DealService {
     await this.deals.save(
       this.deals.create({
         compa_name, //undefined
+        seller_address,
         compaBrand_ImgURL,
         seller: sellMember,
         robot: newRobot

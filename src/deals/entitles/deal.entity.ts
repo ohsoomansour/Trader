@@ -6,22 +6,6 @@ import { Order } from "src/orders/entities/order.entity";
 import {Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
 import { Robot } from "./robot.entity";
 
-
-/* 두 가지 경우
- 1. 판매자가 deal를 만들 것이냐
-   예) 중고거래 느낌이냐 
-   판매자 - 고객 one to one 관계
-   
- 2. 운영자가 제품을 만들것이냐 ㅇ
-   예) 크림 
-
-  name:string;
-  price: number;
-  description: string;
-  rb_glbURL: string;
-
-*/
-
 @Entity()
 export class Deal extends CoreEntity {
   @Column({nullable:true})
@@ -39,6 +23,9 @@ export class Deal extends CoreEntity {
   seller: Member;
   @RelationId((deal:Deal) => deal.seller)
   sellerId: number;
+
+  @Column({nullable: true})
+  seller_address:string;
   //Robot가 삭제될 때 관련된 자식 엔티티(여기서는 Deal)도 함께 삭제
   @ManyToOne(() => Robot, {onDelete: 'CASCADE'})
   robot: Robot;
@@ -48,9 +35,7 @@ export class Deal extends CoreEntity {
   @OneToMany(
     () => Order,
     order => order.deal,
-    
   )
   order:Order;
-  
   
 }

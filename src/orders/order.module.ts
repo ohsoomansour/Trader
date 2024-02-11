@@ -11,7 +11,7 @@ import { OrderItem } from './entities/order-item.entity';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order, OrderItem, Robot, Deal, Member])],
+  imports: [TypeOrmModule.forFeature([Order, OrderItem, Robot, Deal, Member, OrderItem])],
   controllers:[OrderController],
   providers:[OrderService]
 })
