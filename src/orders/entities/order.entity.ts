@@ -31,7 +31,7 @@ export class Order extends CoreEntity {
   )
   customer: Member;
     
-  @Column()
+  @Column()  
   address: string;
 
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending})

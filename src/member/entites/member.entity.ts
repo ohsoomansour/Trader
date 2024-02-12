@@ -104,7 +104,7 @@ export class Member extends CoreEntity {
   address: string;
 
   @Column({nullable:true})
-  memberRole: MemberRole;
+  memberRole: string;
 
   @Column({nullable : true})
   lastActivityAt:Date;

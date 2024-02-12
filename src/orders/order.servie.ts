@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Order } from "./entities/order.entity";
 import { Repository } from "typeorm";
@@ -32,8 +32,9 @@ export class OrderService {
     private readonly robots: Repository<Robot>,
     @InjectRepository(OrderItem)
     private readonly orderitems: Repository<OrderItem>,
-  ){}
-  //orderInput: OrderInput
+   
+  ){}  
+  private logger = new Logger('OrderService')
   async makeaOrder(orderInput, customer: Member):Promise<OrderOutputDTO>{
     try{
       //entity 
@@ -67,6 +68,7 @@ export class OrderService {
       
       return {
         ok: true,
+        order: newOrder
       }
     } catch (e) {
       console.error(e);
@@ -90,7 +92,40 @@ export class OrderService {
     }
     
     */
+  }
+  //, me:Member
+  async getOrder(orderId:number, me):Promise<Order> {
+    try {
+      const myOrder = await this.orders.findOne({
+        where:{
+          id: orderId
+        },
+        relations:{
+          customer: true,
+          deal: true,
+        }
+      })
 
+      
+      //고객의 주문정보와 로그인한 사람의 정보가 일치하지 않으면 
+      /*myOrder.customer.userId! != me.userId  */
+      console.log('myOrder.customer.userId:')
+      console.log(myOrder.customer.userId) //osoomansour37@naver.com    me.userId == undefined 
+      console.log('me.userId:')
+      console.log(me.userId)
+      //http://localhost:3001/order/info/19
+      if(myOrder.customer.userId != me.userId){
+        throw new Error('userId PROBLEM!')
+        //에러 날려주면
+      } else {
+        return myOrder;
+      }
+      
+    } catch (e) {
+      console.error(e);
+      this.logger.error('1. 주문 id가 올바르지 않거나')
+      this.logger.error('2. myOrder.cutomer.userId가 undefined 또는 me(로그인 사용자)의 userId값이 undefiend 입니다.');
+    }
   }
 
 }
