@@ -49,15 +49,24 @@ export class OrderService {
           id: orderInput.items.robot.id,
         }
       })
-      //order_item도 새로운 entity를 만들어줘야지 
+      console.log("orderInput.seller:")
+      console.log(orderInput.seller)
       const orderitem = this.orderitems.create({
         robot,
         options: orderInput.items.options
       },)
       await this.orderitems.save(orderitem)
-
+      //seller 찾아서 주문을 넣어주자
+      const seller = await this.members.findOne({
+        where:{
+          userId: orderInput.seller,
+        }
+      })
+      console.log("seller:")
+      console.log(seller)
       const newOrder = this.orders.create({
         deal,
+        seller,
         customer,
         address: orderInput.address,
         status: OrderStatus.Pending, //서버에서 준비중 기본값 
@@ -74,58 +83,56 @@ export class OrderService {
       console.error(e);
       
     }
-    /*order 가져올 때는 relation
-     async getAllDeal() {
-    try {
-      const allDeals = await this.deals.find({
-        order: {
-          id: 'DESC',
-        },
-        cache:true,
-        relations:{
-            robot: true,
-          }
-        })
-        return allDeals;
-      } catch (e) {
-      }
-    }
-    
-    */
+
   }
-  //, me:Member
-  async getOrder(orderId:number, me):Promise<Order> {
+
+  //, orderId:number
+  async getMyOrder(customer:Member):Promise<Member> {
     try {
-      const myOrder = await this.orders.findOne({
+      //나의 주문 정보가 뜬다. 
+    const myOrders = await this.members.findOne({
+      where:{
+        userId: customer.userId,
+      },
+      relations:{
+        order:{
+          items:{
+            robot:true
+          }
+        }
+      }
+    })
+    return myOrders;       
+
+    } catch (e) {
+      console.error(e);
+      this.logger.error('jwt 확인 또는 로그인 사용자 정보를 확인하세요.');
+    }
+
+  }
+  async takeOrders(seller:Member) {
+    try {
+      const takingOrders = await this.members.findOne({
         where:{
-          id: orderId
+          userId: seller.userId,
         },
         relations:{
-          customer: true,
-          deal: true,
+          takingorders:{
+            items:{
+              robot:true
+            },
+            customer:true
+          },
+          
         }
       })
-
-      
-      //고객의 주문정보와 로그인한 사람의 정보가 일치하지 않으면 
-      /*myOrder.customer.userId! != me.userId  */
-      console.log('myOrder.customer.userId:')
-      console.log(myOrder.customer.userId) //osoomansour37@naver.com    me.userId == undefined 
-      console.log('me.userId:')
-      console.log(me.userId)
-      //http://localhost:3001/order/info/19
-      if(myOrder.customer.userId != me.userId){
-        throw new Error('userId PROBLEM!')
-        //에러 날려주면
-      } else {
-        return myOrder;
-      }
+      return takingOrders;
       
     } catch (e) {
       console.error(e);
-      this.logger.error('1. 주문 id가 올바르지 않거나')
-      this.logger.error('2. myOrder.cutomer.userId가 undefined 또는 me(로그인 사용자)의 userId값이 undefiend 입니다.');
+      this.logger.log('jwt 확인 또는 판매자 정보를 확인하세요.');
     }
   }
+  
 
 }

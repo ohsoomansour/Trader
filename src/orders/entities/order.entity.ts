@@ -30,6 +30,12 @@ export class Order extends CoreEntity {
     member => member.orders
   )
   customer: Member;
+
+  @ManyToOne(
+    () => Member,
+    
+  )
+  seller:Member;
     
   @Column()  
   address: string;

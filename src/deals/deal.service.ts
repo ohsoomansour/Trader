@@ -61,6 +61,7 @@ export class DealService {
         cache:true,
         relations:{
           robot: true,
+          seller:true,
         }
       })
       return allDeals;

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {  Controller, Get, Logger, Param, Post, Req } from '@nestjs/common';
+import {  Controller, Get, Logger, Post, Req } from '@nestjs/common';
 import { OrderService } from './order.servie';
 
 
@@ -18,15 +18,20 @@ export class OrderController {
     return this.orderService.makeaOrder(req.body, customer)
   }
 
-  //고객 입장 
-  @Get('/info/:orderId')  //, @Req() req:Request
-  getOrder(@Param('orderId') orderId: string, @Req() req:Request) {
-    const me = req['member'];
-    this.logger.log('/order/info/:id')
-    console.log("whoamI");
-    console.log(me);
+  //@Explain:고객 입장, 나의 주문 확인 
+  @Get('/info')  
+  getMyOrder(@Req() req:Request) {
+    const customer = req['member'];
+    this.logger.log('/order/info/ 경로, who am I? ')
+    console.log(customer);
 
-    return this.orderService.getOrder(parseInt(orderId), me); //, me
+    return this.orderService.getMyOrder(customer); 
+  }
+  //@Explain: 판매자 입장, 고객 주문 확인 
+  @Get('/takeorders')
+  takeOrders(@Req() req: Request) {
+    const seller = req['member']
+    return this.orderService.takeOrders(seller)
   }
 
 }

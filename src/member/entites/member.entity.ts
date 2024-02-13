@@ -120,6 +120,9 @@ export class Member extends CoreEntity {
     deal => deal.seller
   )
   deal: Deal[];
+
+  
+
   
   @OneToMany(
     () => Order,
@@ -132,6 +135,12 @@ export class Member extends CoreEntity {
     orders => orders.customer
   )
   order:Order;
+
+  @OneToMany(
+    () => Order,
+    order => order.seller
+  )
+  takingorders: Order;
 
 
   @BeforeInsert() //@explain:최초 삽입 시, (값이 없을 때) 아래의 method를 호출
