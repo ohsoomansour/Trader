@@ -5,9 +5,14 @@ import { Member } from "src/member/entites/member.entity";
 import { Order } from "src/orders/entities/order.entity";
 import {Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
 import { Robot } from "./robot.entity";
+import { Store } from "src/orders/entities/store.entity";
+
 
 @Entity()
 export class Deal extends CoreEntity {
+  push() {
+    throw new Error("Method not implemented.");
+  }
   @Column({nullable:true})
   compa_name:string;
 
@@ -38,4 +43,12 @@ export class Deal extends CoreEntity {
   )
   order:Order;
   
+  @OneToMany(
+    () => Store,
+    store => store.deal
+  )
+  store:Store;
+  
+
+
 }

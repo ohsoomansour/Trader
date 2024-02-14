@@ -34,4 +34,15 @@ export class OrderController {
     return this.orderService.takeOrders(seller)
   }
 
+  @Post('/storegoods')
+  storeGoods(@Req() req: Request){
+    const me = req['member'];
+    return this.orderService.storeGoods(req.body, me);
+  }
+
+  @Get('/getstoredgoods')
+  getStoredGoods(@Req() req: Request){
+    const customer = req['member'];
+    return this.orderService.getStoredGoods(customer)
+  }
 }

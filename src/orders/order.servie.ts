@@ -8,6 +8,8 @@ import { Member } from "src/member/entites/member.entity";
 import { Deal } from "src/deals/entitles/deal.entity";
 import { Robot } from "src/deals/entitles/robot.entity";
 import { OrderItem } from "./entities/order-item.entity";
+import { Store } from "./entities/store.entity";
+
 
 export enum OrderStatus  {
   Pending = "Pending",
@@ -32,9 +34,12 @@ export class OrderService {
     private readonly robots: Repository<Robot>,
     @InjectRepository(OrderItem)
     private readonly orderitems: Repository<OrderItem>,
+    @InjectRepository(Store)
+    private readonly stores: Repository<Store>,
    
   ){}  
   private logger = new Logger('OrderService')
+
   async makeaOrder(orderInput, customer: Member):Promise<OrderOutputDTO>{
     try{
       //entity 
@@ -49,8 +54,6 @@ export class OrderService {
           id: orderInput.items.robot.id,
         }
       })
-      console.log("orderInput.seller:")
-      console.log(orderInput.seller)
       const orderitem = this.orderitems.create({
         robot,
         options: orderInput.items.options
@@ -134,5 +137,99 @@ export class OrderService {
     }
   }
   
+  async storeGoods(savingInput, me:Member) {
+    console.log("me:")
+    console.log(me)
+    
 
+    //1. 해당 deal를 찾고 
+    const dealId = parseInt(savingInput.dealId);
+    const oneDeal = await this.deals.findOne({
+      where:{
+        id: dealId,
+      }
+    })
+    //2. deal를 (배열 형태로 ) 저장 
+
+    const newStore = this.stores.create({
+      member: me,  
+      deal: oneDeal   
+    })
+    await this.stores.save(newStore);
+    
+    const saving = await this.members.findOne({
+      where:{
+        userId:me.userId
+      },
+      /**/
+      relations:{
+        store:{
+          deal:true
+        }
+      }
+    })
+    //3. 1차적으로 나의 store.deals 값을 출력이 가능 한 지 확인 
+    this.logger.log("storeGoods에서 나의 saving 확인:")
+    console.log(saving)
+  /*
+  Member {
+  id: 39,
+  createdAt: 2024-01-19T06:22:27.916Z,
+  updatedAt: 2024-02-14T08:52:22.894Z,
+  userId: 'osoomansour37@naver.com',
+  name: '오수만',
+  address: 'sinsadong',
+  memberRole: 'client',
+  lastActivityAt: 2024-02-14T08:52:22.886Z,
+  isDormant: null,
+  verified: false,
+  store: [
+    Store {
+      id: 30,
+      createdAt: 2024-02-14T12:41:38.405Z,
+      updatedAt: 2024-02-14T12:41:38.405Z,
+      deal: null
+    },
+    Store {
+      id: 31,
+      createdAt: 2024-02-14T12:53:24.584Z,
+      updatedAt: 2024-02-14T12:53:24.584Z,
+      deal: [Deal]
+    },
+    Store {
+      id: 32,
+      createdAt: 2024-02-14T12:56:12.116Z,
+      updatedAt: 2024-02-14T12:56:12.116Z,
+      deal: [Deal]
+    },
+    Store {
+      id: 33,
+      createdAt: 2024-02-14T13:00:51.203Z,
+      updatedAt: 2024-02-14T13:00:51.203Z,
+      deal: [Deal]
+    },
+    Store {
+      id: 34,
+      createdAt: 2024-02-14T13:01:08.229Z,
+      updatedAt: 2024-02-14T13:01:08.229Z,
+      deal: [Deal]
+    },
+    Store {
+      id: 35,
+      createdAt: 2024-02-14T13:01:15.364Z,
+      updatedAt: 2024-02-14T13:01:15.364Z,
+      deal: [Deal]
+    }
+  ]
+}
+    
+    */
+
+  }
+
+  async getStoredGoods(customer:Member) {
+    //2.Save  makeaOrder 쿼리를 탄다. 
+    //로그인 유저의 아이디를 바탕으로 member엔티티를 찾아와서 ㅇ
+  }
+  
 }

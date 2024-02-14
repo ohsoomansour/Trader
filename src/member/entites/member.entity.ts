@@ -77,6 +77,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { registerEnumType } from '@nestjs/graphql';
 import { Deal } from 'src/deals/entitles/deal.entity';
 import { Order } from 'src/orders/entities/order.entity';
+import { Store } from 'src/orders/entities/store.entity';
 
 
 export enum MemberRole {
@@ -121,9 +122,6 @@ export class Member extends CoreEntity {
   )
   deal: Deal[];
 
-  
-
-  
   @OneToMany(
     () => Order,
     oreders => oreders
@@ -141,6 +139,12 @@ export class Member extends CoreEntity {
     order => order.seller
   )
   takingorders: Order;
+
+  @OneToMany(
+    () => Store,
+    store => store.member
+  )
+  store:Store[];
 
 
   @BeforeInsert() //@explain:최초 삽입 시, (값이 없을 때) 아래의 method를 호출

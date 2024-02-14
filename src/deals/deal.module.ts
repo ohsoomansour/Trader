@@ -8,9 +8,10 @@ import { DealService } from './deal.service';
 import { Deal } from './entitles/deal.entity';
 import { Robot } from './entitles/robot.entity';
 import { Member } from 'src/member/entites/member.entity';
+import { Store } from 'src/orders/entities/store.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order, OrderItem, Robot, Deal, Member  ])],
+  imports: [TypeOrmModule.forFeature([Order, OrderItem, Robot, Deal, Member, Store  ])],
   controllers:[DealController],
   providers: [DealService]
 })

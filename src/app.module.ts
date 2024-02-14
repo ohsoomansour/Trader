@@ -90,6 +90,7 @@ import { DealModule } from './deals/deal.module';
 import { Robot } from './deals/entitles/robot.entity';
 import { DownloadModule } from './download/download.module';
 import { OrderModule } from './orders/order.module';
+import { Store } from './orders/entities/store.entity';
 
 
 
@@ -117,7 +118,7 @@ import { OrderModule } from './orders/order.module';
       database: process.env.DB_NAME,
       synchronize: true,
       logging: true,
-      entities: [Member, Verification, Deal, Order, OrderItem, Robot], //[join(__dirname, '/**/*.entity.ts')]
+      entities: [Member, Verification, Deal, Order, OrderItem, Robot, Store], //[join(__dirname, '/**/*.entity.ts')]
     }),
     MemberModule,
     AdminModule,
