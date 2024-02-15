@@ -149,87 +149,50 @@ export class OrderService {
         id: dealId,
       }
     })
-    //2. deal를 (배열 형태로 ) 저장 
+    //2. store 리스트에 deal를 (배열 형태로 ) 저장 
 
     const newStore = this.stores.create({
       member: me,  
-      deal: oneDeal   
+      deal: oneDeal,
+      payment: savingInput.payment
+
     })
     await this.stores.save(newStore);
     
-    const saving = await this.members.findOne({
+    
+    
+
+  }
+
+  async getStoredGoods(me:Member) {
+    //3. Store 엔티티에 저장된 deal를 join을 통해 참조해서 불러온다. (token만 있으면 담은 물건을 확인이 가능한다! )
+    const mySaving = await this.members.findOne({
       where:{
         userId:me.userId
+         
       },
-      /**/
       relations:{
         store:{
-          deal:true
-        }
-      }
+          deal:{
+            robot:true,
+            seller:true
+          }
+        },
+      },
+      cache:true,
     })
-    //3. 1차적으로 나의 store.deals 값을 출력이 가능 한 지 확인 
-    this.logger.log("storeGoods에서 나의 saving 확인:")
-    console.log(saving)
-  /*
-  Member {
-  id: 39,
-  createdAt: 2024-01-19T06:22:27.916Z,
-  updatedAt: 2024-02-14T08:52:22.894Z,
-  userId: 'osoomansour37@naver.com',
-  name: '오수만',
-  address: 'sinsadong',
-  memberRole: 'client',
-  lastActivityAt: 2024-02-14T08:52:22.886Z,
-  isDormant: null,
-  verified: false,
-  store: [
-    Store {
-      id: 30,
-      createdAt: 2024-02-14T12:41:38.405Z,
-      updatedAt: 2024-02-14T12:41:38.405Z,
-      deal: null
-    },
-    Store {
-      id: 31,
-      createdAt: 2024-02-14T12:53:24.584Z,
-      updatedAt: 2024-02-14T12:53:24.584Z,
-      deal: [Deal]
-    },
-    Store {
-      id: 32,
-      createdAt: 2024-02-14T12:56:12.116Z,
-      updatedAt: 2024-02-14T12:56:12.116Z,
-      deal: [Deal]
-    },
-    Store {
-      id: 33,
-      createdAt: 2024-02-14T13:00:51.203Z,
-      updatedAt: 2024-02-14T13:00:51.203Z,
-      deal: [Deal]
-    },
-    Store {
-      id: 34,
-      createdAt: 2024-02-14T13:01:08.229Z,
-      updatedAt: 2024-02-14T13:01:08.229Z,
-      deal: [Deal]
-    },
-    Store {
-      id: 35,
-      createdAt: 2024-02-14T13:01:15.364Z,
-      updatedAt: 2024-02-14T13:01:15.364Z,
-      deal: [Deal]
-    }
-  ]
-}
-    
-    */
+    this.logger.log("storeGoods에서 나의 mySaving 확인:")
+    console.log(mySaving)
 
+    return mySaving;
   }
-
-  async getStoredGoods(customer:Member) {
-    //2.Save  makeaOrder 쿼리를 탄다. 
-    //로그인 유저의 아이디를 바탕으로 member엔티티를 찾아와서 ㅇ
+  
+  async deleteStoredGoods(storageId:number) {
+    this.stores.delete({
+      id:storageId,
+      
+    })
   }
+  
   
 }

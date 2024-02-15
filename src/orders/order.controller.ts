@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {  Controller, Get, Logger, Post, Req } from '@nestjs/common';
+import {  Controller, Delete, Get, Logger, Param, Post, Req } from '@nestjs/common';
 import { OrderService } from './order.servie';
 
 
@@ -42,7 +42,14 @@ export class OrderController {
 
   @Get('/getstoredgoods')
   getStoredGoods(@Req() req: Request){
-    const customer = req['member'];
-    return this.orderService.getStoredGoods(customer)
+    const me = req['member'];
+    return this.orderService.getStoredGoods(me)
+  }
+
+  @Delete('/deletestoredgoods/:storageId')
+  deleteStoredGoods(@Param('storageId') storageId: number) {
+    this.logger.log('/deletestoredgoods:')
+    console.log(storageId)
+    this.orderService.deleteStoredGoods(storageId);
   }
 }
