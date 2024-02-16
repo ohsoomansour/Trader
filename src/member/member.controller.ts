@@ -130,6 +130,19 @@ export class MemberController {
     }
   }
 
+  @Role(['any'])
+  @Get('/getmyinfo')
+  async getMyInfo(@Req() req: Request): Promise<Member> {
+    try {
+      const member = req['member'];
+      this.logger.log('getMyInfo 경로의 member값:');
+      console.log(member);
+      return member;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   /*
    * @Author : OSOOMAN
    * @Date : 2024.1.17
@@ -156,20 +169,6 @@ export class MemberController {
     }
   }
 
-  @Role(['any'])
-  @Post('/getuser')
-  async getId(@Body() { userId }): Promise<Member> {
-    try {
-      const { member } = await this.memberService.findById(userId);
-      console.log(member);
-      this.logger.log('getid 경로의 member값:');
-      console.log(member);
-      //const id = member?.id;
-      return member;
-    } catch (e) {
-      console.error(e);
-    }
-  }
   /*
    * @Author : OSOOMAN
    * @Date : 2024.1.6
