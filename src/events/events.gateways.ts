@@ -186,8 +186,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   }
   
   private logger = new Logger('webrtc');
-  private roomToSockets: { [roomId: string]: Socket[] } = {}; //enum 타입
-  private streamingroomToSockets: { [roomId: string]: Socket[] } = {};
+  private conferenceRoomToSockets: { [roomId: string]: Socket[] } = {}; //enum 타입
+  private chattingRoomToSockets: { [roomId: string]: Socket[] } = {};
   private roomUsers : { [roomId: string]: string[] } = {};
   private connectedClients: Map<string, { userName: string, room: string }> = new Map();
   private count:number;
@@ -209,7 +209,51 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.connectedClients.delete(client.id);
   } 
 
-  
+  @SubscribeMessage('join')
+  handleEmit(@MessageBody() roomId: any, @ConnectedSocket() client: Socket) {
+    this.logger.log('we are receiving a join event');
+      //# 방에 대한 소켓 매핑 초기화
+      if (!this.conferenceRoomToSockets[roomId]) {
+        this.conferenceRoomToSockets[roomId] = [];
+      }
+
+      try {
+        const numberOfClients = this.conferenceRoomToSockets[roomId].length; 
+        if(numberOfClients === 0) { // []
+          this.logger.log(`Creating room ${roomId} and emitting room_created socket event`);
+        //#Explain: "room1" : [소켓1, 소켓2 ... ] 이렇게 room1에 있는 소켓들에게 room_created 이벤트를 발생  
+          this.conferenceRoomToSockets[roomId].push(client);
+          if (this.conferenceRoomToSockets[roomId]) {
+            this.conferenceRoomToSockets[roomId].forEach((s) => {
+              s.emit('room_created', roomId);
+            });
+          }
+          //시그널링 서버, 다른 peer에게 데이터를 전송한다. 
+        } else if (numberOfClients >= 1 ){
+          this.logger.log(`Joining room ${roomId} and emitting room_joined socket event`);
+          this.conferenceRoomToSockets[roomId].push(client);
+          if (this.conferenceRoomToSockets[roomId]) {
+            this.conferenceRoomToSockets[roomId].forEach((s) => {
+              s.emit('room_joined', roomId);
+            });
+          }
+          
+        } else if ( numberOfClients > 5 ){ 
+          this.logger.log(`Cant't join room ${roomId}, emitting full_room socket event`)
+          if (this.conferenceRoomToSockets[roomId]) {
+            this.conferenceRoomToSockets[roomId].forEach((s) => {
+              s.emit('full_room', roomId);
+            });
+          }
+          return new Error('The room was full of Sockets')
+        }
+      } catch (e) {
+        this.logger.error(`The room was full of Sockets`);
+        this.logger.debug(`이 방의 정원은 5입니다. 다른 roomId에 참가 해주세요.`);
+        console.error(e)
+      }
+      
+  } 
   /*
    * @Author : OSOOMAN
    * @Date : 24.1.5
@@ -227,6 +271,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     try {
       await this.chatValidation.validateUserDto(userInfo); 
       this.logger.log(`${userInfo.userName} entered the room`);
+      console.log(userInfo)
       //# 유저 리스트를 채팅창에 보내기 
       if (!this.roomUsers[userInfo.roomId]) {
         this.roomUsers[userInfo.roomId] = [];  //방의 아이디 값이 없으면 초기화 
@@ -241,7 +286,6 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         })
       }
      
-      
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
       function formatCurrentTime(): string {
         const now = new Date();
@@ -252,13 +296,13 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         return `${hours}:${minutes}:${seconds}`;
       }
       const currentTime = formatCurrentTime();
-      if (!this.streamingroomToSockets[userInfo.roomId]) {
-        this.streamingroomToSockets[userInfo.roomId] = [];  //초기화 
+      if (!this.chattingRoomToSockets[userInfo.roomId]) {
+        this.chattingRoomToSockets[userInfo.roomId] = [];  //초기화 
       }
 
-      this.streamingroomToSockets[userInfo.roomId].push(client)
-      if(this.streamingroomToSockets[userInfo.roomId]){
-        this.streamingroomToSockets[userInfo.roomId].forEach((s:Socket) => {
+      this.chattingRoomToSockets[userInfo.roomId].push(client)
+      if(this.chattingRoomToSockets[userInfo.roomId]){
+        this.chattingRoomToSockets[userInfo.roomId].forEach((s:Socket) => {
           s.emit('participants', {participant: [`${userInfo.userName} 님이 참가하였습니다. ${currentTime}`, ]});
           
         })
@@ -282,10 +326,11 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
              *주의: 사진은 AWS S3의 (goodgang3)bucket에 저장되고 사진을 전송하고 컨트롤러에서 fetch의 결과가 약 20초 소요됩니다. 
     */
   @SubscribeMessage('message') 
-  async handleEvent(@MessageBody() messages, @ConnectedSocket() client: Socket): Promise<void> {
+  async handleEvent(@MessageBody() messages,): Promise<void> {
     this.logger.log(`We are receiving a Message: ${messages[0]}`)
-    this.logger.log(`We are receiving a Image: ${messages[1]}`)
-
+    this.logger.log(`We are receiving a Image or Video: ${messages[1]}`)
+    this.logger.log(`We are receiving a chattingRoomId: ${messages[2]}`)
+    console.log(messages)
     //룸의 user의 소켓에만 보낸다!
     function formatCurrentTime(): string {
       const now = new Date();
@@ -304,65 +349,26 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
         this.count += 1;
         if( this.count >= 3 ){
-          client.emit('message', new ProfanityFilterPipe().transform(messages[0]) );
+          this.chattingRoomToSockets[messages[2]].forEach((s:Socket) => {
+            s.emit('message', new ProfanityFilterPipe().transform(messages[0]));
+          })
+
         }
       }
       const msgObj: object = { msg: filteredMessage, url: messages[1], time: `${currentTime}` };
-      client.emit('message', msgObj ); 
+      
+      /* client.emit('message', msgObj );  messages: [ 'osoomansour41@naver.com:  goods', '', 'testtyo' ]   */
+      this.chattingRoomToSockets[messages[2]].forEach((s:Socket) => {
+        s.emit('message', msgObj);
+        
+      })
+      
+
     } catch (e) {
       this.logger.error(`messages의 자료 타입을 확인하세요.`);
       console.error(e);
     }
-   
-
   }
-  
-  //########################################################################################### 
-  @SubscribeMessage('join')
-  handleEmit(@MessageBody() roomId: any, @ConnectedSocket() client: Socket) {
-    this.logger.log('we are receiving a join event');
-      //# 방에 대한 소켓 매핑 초기화
-      if (!this.roomToSockets[roomId]) {
-        this.roomToSockets[roomId] = [];
-      }
-      /**/
-      try {
-        const numberOfClients = this.roomToSockets[roomId].length; 
-        if(numberOfClients === 0) { // []
-          this.logger.log(`Creating room ${roomId} and emitting room_created socket event`);
-        //#Explain: "room1" : [소켓1, 소켓2 ... ] 이렇게 room1에 있는 소켓들에게 room_created 이벤트를 발생  
-          this.roomToSockets[roomId].push(client);
-          if (this.roomToSockets[roomId]) {
-            this.roomToSockets[roomId].forEach((s) => {
-              s.emit('room_created', roomId);
-            });
-          }
-          //시그널링 서버, 다른 peer에게 데이터를 전송한다. 
-        } else if (numberOfClients >= 1 ){
-          this.logger.log(`Joining room ${roomId} and emitting room_joined socket event`);
-          this.roomToSockets[roomId].push(client);
-          if (this.roomToSockets[roomId]) {
-            this.roomToSockets[roomId].forEach((s) => {
-              s.emit('room_joined', roomId);
-            });
-          }
-          
-        } else if ( numberOfClients > 5 ){ 
-          this.logger.log(`Cant't join room ${roomId}, emitting full_room socket event`)
-          if (this.roomToSockets[roomId]) {
-            this.roomToSockets[roomId].forEach((s) => {
-              s.emit('full_room', roomId);
-            });
-          }
-          return new Error('The room was full of Sockets')
-        }
-      } catch (e) {
-        this.logger.error(`The room was full of Sockets`);
-        this.logger.debug(`이 방의 정원은 5입니다. 다른 roomId에 참가 해주세요.`);
-        console.error(e)
-      }
-      
-  } 
   
   /*# 같은 room에 있는 모든 소켓들에 보내는 
     These events are emitted to all the sockets conneted to the same room except the sender.
@@ -371,8 +377,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   startToCall(@MessageBody() roomId) {
     this.logger.log(`Broadcasting start_call event to peers in room ${roomId}`);
     //지정된 roomId를 가진 수신자에게만 보냄: roomId 가 어디서? 
-    if (this.roomToSockets[roomId]) {
-      this.roomToSockets[roomId].forEach((s) => {
+    if (this.conferenceRoomToSockets[roomId]) {
+      this.conferenceRoomToSockets[roomId].forEach((s) => {
         s.emit('start_call');
       });
     }  
@@ -384,8 +390,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
     try {
       
-      if (this.roomToSockets[webrtc_offer.roomId]) {
-        this.roomToSockets[webrtc_offer.roomId].forEach((s) => {
+      if (this.conferenceRoomToSockets[webrtc_offer.roomId]) {
+        this.conferenceRoomToSockets[webrtc_offer.roomId].forEach((s) => {
         /*Testcase1.원래는 로직은 webrtc_offer로 가서 -> createSDPAnswer로 날리는게 맞음
           Testcase2. 그런데 현재는 peer가 하나를 가지고 두개를 가정하는 시험이기 때문에 answer를 받음 */
           s.emit('webrtc_answer', webrtc_offer.sdp);
@@ -402,8 +408,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.logger.log(`Broadcasting webrtc_Answer event to peers in room ${webrtc_Answer.roomId}`)
     console.log(webrtc_Answer)
   
-    if (this.roomToSockets[webrtc_Answer.roomId]) {
-      this.roomToSockets[webrtc_Answer.roomId].forEach((s) => {
+    if (this.conferenceRoomToSockets[webrtc_Answer.roomId]) {
+      this.conferenceRoomToSockets[webrtc_Answer.roomId].forEach((s) => {
         s.emit('webrtc_offer', webrtc_Answer.sdp);
       });
     }
@@ -426,8 +432,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   receiveWebRTCIceCandidate(@MessageBody() webrtc_ice_candidate) {
     this.logger.log(`Broadcasting webrtc_ice_candidate event to peers in room ${webrtc_ice_candidate.roomId}`)
     //console.log(webrtc_ice_candidate);
-    if (this.roomToSockets[webrtc_ice_candidate.roomId]) {
-      this.roomToSockets[webrtc_ice_candidate.roomId].forEach((s) => {
+    if (this.conferenceRoomToSockets[webrtc_ice_candidate.roomId]) {
+      this.conferenceRoomToSockets[webrtc_ice_candidate.roomId].forEach((s) => {
         s.emit('webrtc_ice_candidate', webrtc_ice_candidate);
       });
     }

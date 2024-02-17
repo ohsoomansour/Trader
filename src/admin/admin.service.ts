@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AupdateMemberInfo } from 'src/member/dtos/updateMember.dto';
 import { Member } from 'src/member/entites/member.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 /*constructor(private readonly usersService: UsersService ) {}
  [소프트웨어 설계 SOLID ]
   - Injectable 데코레이터를 통해 Singleton 의 Dependency가 생기게 되는데
@@ -14,6 +14,7 @@ export class AdminService {
     @InjectRepository(Member)
     private readonly members: Repository<Member>,
   ) {}
+  private logger = new Logger();
   async getAllmembers(): Promise<Member[]> {
     try {
       const members = await this.members.find({
@@ -28,11 +29,14 @@ export class AdminService {
     }
   }
   // 이름으로 검색하여 목표는 1명이나 결과는 동명이인의 사람이 나올 가능성이 있음
-  async searchAmember(name: string): Promise<Member> {
+  async searchAmember(name: string): Promise<Member[]> {
     try {
-      //findOneBy({ name: name });
-      const searchedMember = await this.members.findOneOrFail({
-        where: { name: name },
+      if (name === '') {
+        return [];
+      }
+      this.logger.log('admin.servce: searchAmember');
+      const searchedMember = await this.members.find({
+        where: { name: Like(`%${name}%`) },
         select: [
           'name',
           'userId',
@@ -44,7 +48,6 @@ export class AdminService {
         ],
         cache: true,
       });
-
       return searchedMember;
     } catch (e) {
       console.error(e);
