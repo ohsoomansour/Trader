@@ -157,7 +157,6 @@ import { AdminModule } from './admin/admin.module';
 import { EventsModule } from './events/events.module';
 import { ChatModule } from './chat/chat.module';
 import { APP_PIPE } from '@nestjs/core';
-import { HomeResolver } from './home.resolver';
 //import { GraphQLModule } from '@nestjs/graphql';
 //import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import * as Joi from 'joi';
@@ -188,7 +187,7 @@ import { Store } from './orders/entities/store.entity';
         NODE_ENV: Joi.string()
         .valid('dev','production', 'test' )
         .required(),
-        DB_HOST:Joi.string(),
+        DB_HOST:Joi.string(), //heroku는 url외  더 이상 찾을 수 없어 required 삭제 (local에서만 사용)  
         DB_PORT:Joi.string(),
         DB_PASSWORD:Joi.string(),
         DB_USERNAME: Joi.string(),
@@ -200,11 +199,15 @@ import { Store } from './orders/entities/store.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,         //postgresql은 비번을 묻지 않음
-      database: process.env.DB_NAME,
+      ...(process.env.DATABASE_URL
+        ? { url: process.env.DATABASE_URL}
+        : { 
+            host: process.env.DB_HOST,
+            port: +process.env.DB_PORT,
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,         //postgresql은 비번을 묻지 않음
+            database: process.env.DB_NAME,
+          }),
       synchronize: true,
       logging: true,
       entities: [Member, Verification, Deal, Order, OrderItem, Robot, Store], //[join(__dirname, '/**/*.entity.ts')]
@@ -272,7 +275,6 @@ import { Store } from './orders/entities/store.entity';
         disableErrorMessages: true,
       }),*/
     },
-    HomeResolver,
 
   ], //기본적으로 제공되는 ValidationPipe
 })
