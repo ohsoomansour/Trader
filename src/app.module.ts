@@ -137,7 +137,6 @@
                                 (heroku/7.66.4 win32-x64 node-v17.6.0)
      > npx heroku login
      🚨Create new Git repository
-     > cd nuber-eats-backend
      > git init
      > npx heroku git:remote -a trade
   
