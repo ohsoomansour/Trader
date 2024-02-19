@@ -185,10 +185,15 @@ import { Store } from './orders/entities/store.entity';
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
       //joi는 변수의 schema, type 등을 런타임에서 체킹하도록 도와주는 패키지이
       validationSchema: Joi.object({
-        JWT_SECRET: Joi.string().required(),
+        NODE_ENV: Joi.string()
+        .valid('dev','production', 'test' )
+        .required(),
         DB_HOST:Joi.string(),
         DB_PORT:Joi.string(),
         DB_PASSWORD:Joi.string(),
+        DB_USERNAME: Joi.string(),
+        DB_NAME: Joi.string(),
+        JWT_SECRET: Joi.string().required(),
         AWS_ACCESS_KEY: Joi.string().required(),
         AWS_ACCESS_SECRET_KEY: Joi.string().required(),
       }),
