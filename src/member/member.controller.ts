@@ -94,7 +94,6 @@ export class MemberController {
   //로그인 버튼을 누르면 홈으로 이동
   @Post('/login')
   @Role(['any'])
-  @Header('Access-Control-Allow-Origin', '*')
   @UseGuards(AuthGuard)
   async logIn(
     //#주의 사항: @Body 또는 아래 @Req req 둘 중 하나만 써야된다
