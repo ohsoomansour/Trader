@@ -175,8 +175,6 @@ import { DownloadModule } from './download/download.module';
 import { OrderModule } from './orders/order.module';
 import { Store } from './orders/entities/store.entity';
 
-
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -188,7 +186,7 @@ import { Store } from './orders/entities/store.entity';
         .valid('dev','production', 'test' )
         .required(),
         DB_HOST:Joi.string(), //heroku는 url외  더 이상 찾을 수 없어 required 삭제 (local에서만 사용)  
-        DB_PORT:Joi.string(),
+        DB_PORT:Joi.string(), 
         DB_PASSWORD:Joi.string(),
         DB_USERNAME: Joi.string(),
         DB_NAME: Joi.string(),

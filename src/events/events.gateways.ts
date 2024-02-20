@@ -169,8 +169,7 @@ import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
 
 
-
-@WebSocketGateway(8080, {
+@WebSocketGateway(parseInt(process.env.PORT) || 8080, {
   path: '/webrtc',
   cors: '*',
   transports:['websocket'],
