@@ -52,8 +52,8 @@ async function bootstrap() {
   //const redisIoAdapter = new RedisIoAdapter(app);
   //await redisIoAdapter.connectToRedis();
   //app.useWebSocketAdapter(redisIoAdapter); //redis 소켓
-  //app.useWebSocketAdapter(new WsAdapter(app));  //웹소켓
-  app.useWebSocketAdapter(new IoAdapter(app)); // socket
+  //app.useWebSocketAdapter(new WsAdapter(app));  //웹소켓 어댑터
+  app.useWebSocketAdapter(new IoAdapter(app)); // socket.io 어댑터
   app.enableCors({
     origin: true,
     credentials: true,
@@ -67,13 +67,6 @@ async function bootstrap() {
     }),
     json({ limit: '50mb' }),
     urlencoded({ limit: '50mb', extended: true }),
-    //CORS 정책 비활성화
-    (req, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      next();
-    },
   );
   //app.use(JwtMiddleware);
 
