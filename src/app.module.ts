@@ -139,7 +139,10 @@
      🚨Create new Git repository
      > git init
      > npx heroku git:remote -a trade
-  
+     재시작
+     > npx heroku restart
+     > npx heroku login
+     > npx heroku logs --tail 
   3. 커밋  
     git add .
     > 💊해결 한 방: git config --global core.autocrlf true
