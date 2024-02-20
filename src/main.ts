@@ -67,6 +67,13 @@ async function bootstrap() {
     }),
     json({ limit: '50mb' }),
     urlencoded({ limit: '50mb', extended: true }),
+    //CORS 정책 비활성화
+    (req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      next();
+    },
   );
   //app.use(JwtMiddleware);
 

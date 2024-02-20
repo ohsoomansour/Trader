@@ -142,6 +142,7 @@
   
   3. 커밋  
     git add .
+    > 💊해결 한 방: git config --global core.autocrlf true
     git commit -am "make it better"
     git push heroku main(master)
           
