@@ -43,7 +43,7 @@ import { urlencoded, json } from 'body-parser';
  */
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule); //반환: NestApplication instance
+  const app = await NestFactory.create(AppModule, { cors: true }); //반환: NestApplication instance
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: true, // 프로덕트 단계에서 세부 에러 비활성
