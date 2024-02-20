@@ -168,7 +168,7 @@ import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
 //parseInt(process.env.PORT) ||
-@WebSocketGateway(process.env.NODE_ENV === "production" ? parseInt(process.env.PORT) : 8080, {
+@WebSocketGateway(8080, {
   path: '/webrtc',
   cors: '*',
   transports:['websocket', 'polling'],
