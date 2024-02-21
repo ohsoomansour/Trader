@@ -177,7 +177,7 @@ import { Server} from 'ws';
     allowedHeaders: ["authorization", "Authorization"],
     credentials: true,
   },
-  namespace: /\/ws-.+/,
+  path: 'webrtc',
   transports:['websocket', 'polling'],
   
 })
