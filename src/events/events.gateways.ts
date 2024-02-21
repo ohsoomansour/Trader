@@ -167,13 +167,13 @@ import { ChatUserDto } from 'src/chat/dtos/chat-user.dto';
 import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
+
 //parseInt(process.env.PORT) ||
 @WebSocketGateway(8080, {
   path: '/webrtc',
-  cors: '*',
+  cors: true,
   transports:['websocket', 'polling'],
 
-  
 })
 export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -194,6 +194,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
   @WebSocketServer() 
   server: Server;
+  
   /* @Function : gateway가 실행될 때 가장 먼저 실행되는 함수*/
   afterInit() {
     this.logger.log('init');
@@ -284,7 +285,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
           userList: this.roomUsers[userInfo.roomId]
         })
       }
-     
+      
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
       function formatCurrentTime(): string {
         const now = new Date();

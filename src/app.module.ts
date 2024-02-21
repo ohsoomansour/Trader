@@ -179,7 +179,6 @@ import { DownloadModule } from './download/download.module';
 import { OrderModule } from './orders/order.module';
 import { Store } from './orders/entities/store.entity';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -302,5 +301,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(JwtMiddleware).forRoutes(
     {path: '*', method: RequestMethod.ALL });
+    //이를 통해 WebSocket 연결의 HTTP 핸드셰이크 요청을 허용할 수 있습니다.
   }
 }
