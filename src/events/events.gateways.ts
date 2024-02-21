@@ -174,7 +174,7 @@ import { Server} from 'ws';
   cors:true,
   namespace:'test',
   path: '/chat',
-  transports:['websocket'],   //, 'polling'
+  transports:['polling'],   //, 'websocket'
   
 })
 export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -200,6 +200,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   /* @Function : gateway가 실행될 때 가장 먼저 실행되는 함수*/
   afterInit() {
     this.logger.log('init');
+    
   }
   /* @Function : 소켓이 연결이 되면 호출되는 함수*/
   handleConnection(@ConnectedSocket() client: Socket) {
