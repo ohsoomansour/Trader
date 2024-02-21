@@ -174,7 +174,7 @@ import { Server} from 'ws';
   cors:true,
   namespace:'test',
   path: '/chat',
-  transports:['polling'],   //, 'websocket'
+  transports:['websocket'],   //, 'websocket'
   
 })
 export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
