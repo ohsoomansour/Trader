@@ -174,7 +174,7 @@ const PORT = process.env.NODE_ENV ==="productiion" ? parseInt(process.env.WS_POR
 {
   /**/
   cors:"*",
-  path: '/chat',
+  //path: '/chat',
   transports:['websocket'],   //, 'websocket'
   
 })
