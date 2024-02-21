@@ -10,7 +10,6 @@ import {
   Patch,
   UseGuards,
   Body,
-  Header,
 } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { Request, Response } from 'express';
@@ -133,7 +132,6 @@ export class MemberController {
 
   @Role(['any'])
   @Get('/getmyinfo')
-  @Header('Access-Control-Allow-Origin', '*')
   async getMyInfo(@Req() req: Request): Promise<Member> {
     try {
       const member = req['member'];
@@ -142,6 +140,7 @@ export class MemberController {
       return member;
     } catch (e) {
       console.error(e);
+      throw new Error('Failed to fetch user information');
     }
   }
 
