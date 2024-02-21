@@ -168,9 +168,9 @@ import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
 //💊해결 한 방: git config --global core.autocrlf true
-//process.env.NODE_ENV ==="productiion" ? parseInt(process.env.PORT) || 8080
-
-@WebSocketGateway(8080, 
+//  git commit -am     -> git push heroku main 
+const PORT = process.env.NODE_ENV ==="productiion" ? parseInt(process.env.WS_PORT) : 8080
+@WebSocketGateway(PORT, 
 {
   /**/
   cors:"*",
