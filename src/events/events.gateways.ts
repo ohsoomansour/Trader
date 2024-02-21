@@ -169,7 +169,7 @@ import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
 //💊해결 한 방: git config --global core.autocrlf true
 //  git commit -am     -> git push heroku main 
-const PORT = process.env.NODE_ENV ==="production" ? parseInt(process.env.PORT) : 8080
+const PORT = process.env.NODE_ENV ==="dev" ? 8080 : undefined;
 @WebSocketGateway(PORT, 
 {
   /**/
