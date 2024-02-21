@@ -169,7 +169,7 @@ import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
 //💊해결 한 방: git config --global core.autocrlf true
 //process.env.NODE_ENV ==="productiion" ? parseInt(process.env.PORT) || 8080
-const PORT = process.env.NODE_ENV ==="productiion" ? parseInt(process.env.PORT) : 8080;
+const PORT = process.env.NODE_ENV ==="productiion" ? 443 : 8080;
 @WebSocketGateway(PORT, 
 {
   /**/
