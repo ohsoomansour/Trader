@@ -170,10 +170,16 @@ import { Server} from 'ws';
 
 //parseInt(process.env.PORT) ||
 @WebSocketGateway(8080, {
-  path: '/webrtc',
-  cors: true,
+  //path: '/webrtc',
+  cors:{
+    origin:"*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["authorization", "Authorization"],
+    credentials: true,
+  },
+  namespace: /\/ws-.+/,
   transports:['websocket', 'polling'],
-
+  
 })
 export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
