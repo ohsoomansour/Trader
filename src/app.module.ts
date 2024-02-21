@@ -128,8 +128,6 @@
 
   🔥github.com/search?q=user%3Asoo-sin   
 
-
-
   1. 📄Heroku Home:https://dashboard.heroku.com/new-app id:osoomansour@naver.com /pw: dhtnaksen@34
       >  npm install -g heroku
   2. 📄The Heroku CLI: https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli
