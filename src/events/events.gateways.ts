@@ -167,12 +167,12 @@ import { ChatUserDto } from 'src/chat/dtos/chat-user.dto';
 import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
-
+//💊해결 한 방: git config --global core.autocrlf true
 //parseInt(process.env.PORT) ||
 @WebSocketGateway(8080, {
   //path: '/webrtc',
   cors:{
-    origin:"*",
+    origin:"https://main--darling-kulfi-cecca8.netlify.app",
     methods: ["GET", "POST"],
     allowedHeaders: ["authorization", "Authorization"],
     credentials: true,
