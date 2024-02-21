@@ -173,8 +173,7 @@ const PORT = process.env.NODE_ENV ==="productiion" ? 443 : 8080;
 @WebSocketGateway(PORT, 
 {
   /**/
-  cors:true,
-  namespace:'test',
+  cors:"*",
   path: '/chat',
   transports:['websocket'],   //, 'websocket'
   
