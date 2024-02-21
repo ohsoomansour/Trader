@@ -170,15 +170,14 @@ import { Server} from 'ws';
 //💊해결 한 방: git config --global core.autocrlf true
 //parseInt(process.env.PORT) ||
 @WebSocketGateway(8080, {
-  /*
+  /**/
   cors:{
-    origin:"https://main--darling-kulfi-cecca8.netlify.app",
+    origin:"*",
     methods: ["GET", "POST"],
     allowedHeaders: ["authorization", "Authorization"],
     credentials: true,
-  },*/
-  cors:true,
-  path: '/chat/socket.io',
+  },
+  path: '/chat',
   transports:['websocket', 'polling'],
   
 })
