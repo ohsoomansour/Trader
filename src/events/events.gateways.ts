@@ -178,7 +178,7 @@ import { Server} from 'ws';
     credentials: true,
   },*/
   cors:true,
-  path: 'chat',
+  path: '/chat',
   transports:['websocket', 'polling'],
   
 })
