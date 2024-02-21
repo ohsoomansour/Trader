@@ -168,8 +168,10 @@ import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
 //💊해결 한 방: git config --global core.autocrlf true
-//parseInt(process.env.PORT) ||
-@WebSocketGateway(443, {
+//process.env.NODE_ENV ==="productiion" ? parseInt(process.env.PORT) || 8080
+const PORT = process.env.NODE_ENV ==="productiion" ? parseInt(process.env.PORT) : 8080;
+@WebSocketGateway(PORT, 
+{
   /**/
   cors:true,
   namespace:'test',
