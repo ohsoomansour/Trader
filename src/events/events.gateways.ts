@@ -172,6 +172,7 @@ import { Server} from 'ws';
 @WebSocketGateway(8080, {
   /**/
   cors:true,
+  namespace:'test',
   path: '/chat',
   transports:['websocket'],   //, 'polling'
   
