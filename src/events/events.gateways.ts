@@ -172,7 +172,6 @@ import { Server} from 'ws';
 const PORT = process.env.NODE_ENV ==="dev" ? 8080 : undefined;
 @WebSocketGateway(PORT, 
 {
-  /**/
   cors:"*",
   //path: '/chat',
   transports:['websocket'],   //, 'websocket'
@@ -212,7 +211,12 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.logger.log(`A socket with id:${client.id} is disconnected From the server.  `)
     this.connectedClients.delete(client.id);
   } 
-
+  
+  @SubscribeMessage('join_room')
+  rtc_joinRoom(){
+    
+  }
+  //===========================  ============================================================
   @SubscribeMessage('join')
   handleEmit(@MessageBody() roomId: any, @ConnectedSocket() client: Socket) {
     this.logger.log('we are receiving a join event');
@@ -319,6 +323,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   
     
   }
+  //=======================================================================================================
   /*
    * @Author : OSOOMAN
    * @Date : 24.1.11
