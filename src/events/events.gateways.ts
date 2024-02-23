@@ -200,7 +200,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   /* @Function : gateway가 실행될 때 가장 먼저 실행되는 함수*/
   afterInit() {
     this.logger.log('init');
-    
+      
   }
   /* @Function : 소켓이 연결이 되면 호출되는 함수*/
   handleConnection(@ConnectedSocket() client: Socket) {
@@ -211,11 +211,42 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.logger.log(`A socket with id:${client.id} is disconnected From the server.  `)
     this.connectedClients.delete(client.id);
   } 
-  
   @SubscribeMessage('join_room')
-  rtc_joinRoom(){
-    
+  rtc_joinRoom(@MessageBody() roomId, @ConnectedSocket() client: Socket){
+    //private conferenceRoomToSockets: { [roomId: string]: Socket[] } = {};
+    console.log(roomId);
+    this.logger.log('join_room');  
+    if (!this.conferenceRoomToSockets[roomId]) {
+      this.conferenceRoomToSockets[roomId] = [];
+    }
+    //전화를 걸고 싶은 방을 고르는 중
+    this.conferenceRoomToSockets[roomId].push(client);
+    this.conferenceRoomToSockets[roomId].forEach((s) => {
+      s.emit("welcom", "Hi! Welcom!!")
+    })
   }
+  @SubscribeMessage('offer')
+  rtc_receiveOffer(@MessageBody() info) {
+    this.conferenceRoomToSockets[info[1]].forEach((s) => {
+      s.emit("offer", info[0])
+    })
+  }
+
+  @SubscribeMessage('answer')
+  rtc_receiveAnswer(@MessageBody() info) {
+    this.logger.log(info);
+    console.log(info)
+    this.conferenceRoomToSockets[info[1]].forEach((s) => {
+      s.emit("answer", info[0])
+    })
+  }
+  @SubscribeMessage("ice")
+  rtc_receiveICEcandidate(@MessageBody() info) {
+    this.conferenceRoomToSockets[info[1]].forEach((s) => {
+      s.emit("answer", info[0])
+    })
+  }
+
   //===========================  ============================================================
   @SubscribeMessage('join')
   handleEmit(@MessageBody() roomId: any, @ConnectedSocket() client: Socket) {
