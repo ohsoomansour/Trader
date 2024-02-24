@@ -5,8 +5,8 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "scripts": {  
-    "prebuild":"rimraf dist",
+  "scripts": {
+    "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env NODE_ENV=prod nest start",
@@ -43,6 +43,7 @@
     "class-validator": "^0.14.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
+    "express": "^4.18.2",
     "express-session": "^1.17.3",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
@@ -54,7 +55,7 @@
     "reflect-metadata": "^0.1.14",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
-    "socket.io": "^4.7.2",
+    "socket.io": "^4.7.4",
     "typeorm": "^0.3.17",
     "ws": "^8.15.1"
   },
