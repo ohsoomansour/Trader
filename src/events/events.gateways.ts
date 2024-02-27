@@ -24,7 +24,6 @@ const PORT = process.env.NODE_ENV ==="dev" ? 8080 : undefined;
   cors:"*",
   //path: '/chat',
   transports:['websocket'],   //, 'websocket'
-  
 })
 export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -42,14 +41,12 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   private connectedClients: Map<string, { userName: string, room: string }> = new Map();
   private count:number;
   
-
   @WebSocketServer() 
   server: Server;
-  
+
   /* @Function : gateway가 실행될 때 가장 먼저 실행되는 함수*/
   afterInit() {
     this.logger.log('init');
-      
   }
   /* @Function : 소켓이 연결이 되면 호출되는 함수*/
   handleConnection(@ConnectedSocket() client: Socket) {
@@ -67,46 +64,29 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.logger.log('join_room');  
     socket.join(roomId);
     socket.to(roomId).emit("welcome", "new Peer Join!")
-
-    /* 
-    if (!this.conferenceRoomToSockets[roomId]) {
-      this.conferenceRoomToSockets[roomId] = [];
-    }
-    this.conferenceRoomToSockets[roomId].push(socket);
-    this.conferenceRoomToSockets[roomId].forEach((s) => {
-      s.emit("welcom", "Hi! Welcom!!")
-    })
-    */
   }
 
   @SubscribeMessage('offer')
   rtc_receiveOffer(@MessageBody() offerInfo, @ConnectedSocket() socket: Socket) {
     this.logger.log('offer');
     socket.to(offerInfo[1]).emit("offer", offerInfo[0]);
-    /*
-    this.conferenceRoomToSockets[info[1]].forEach((s) => {
-      s.emit("offer", info[0])
-    })*/
+
   }
   @SubscribeMessage('answer')
   rtc_receiveAnswer(@MessageBody() answerInfo, @ConnectedSocket() socket: Socket) {
     this.logger.log('answer');
     socket.to(answerInfo[1]).emit("answer", answerInfo[0])
-    
-    /*
-    this.conferenceRoomToSockets[info[1]].forEach((s) => {
-      s.emit("answer", info[0])
-    })
-    */
+  
   }
   @SubscribeMessage("ice")
   rtc_receiveICEcandidate(@MessageBody() ICEinfo, @ConnectedSocket() socket: Socket) {
     socket.to(ICEinfo[1]).emit("ice", ICEinfo[0]);
-    /*
-    this.conferenceRoomToSockets[info[1]].forEach((s) => {
-      s.emit("ice", info[0])
-    })
-    */
+
+  }
+  @SubscribeMessage("chat")
+  rtc_chat(@MessageBody() ICEinfo, @ConnectedSocket() socket: Socket) {
+    socket.to(ICEinfo[1]).emit("ice", ICEinfo[0]);
+
   }
   //===========================  ============================================================
   @SubscribeMessage('join')
@@ -154,6 +134,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       }
       
   } 
+  //=======================================================================================================
   /*
    * @Author : OSOOMAN
    * @Date : 24.1.5
@@ -185,7 +166,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
           userList: this.roomUsers[userInfo.roomId]
         })
       }
-      
+    
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
       function formatCurrentTime(): string {
         const now = new Date();
@@ -203,7 +184,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       this.chattingRoomToSockets[userInfo.roomId].push(client)
       if(this.chattingRoomToSockets[userInfo.roomId]){
         this.chattingRoomToSockets[userInfo.roomId].forEach((s:Socket) => {
-          s.emit('participants', {participant: [`${userInfo.userName} 님이 참가하였습니다. ${currentTime}`, ]});
+          s.emit('participants', {participant: [`${userInfo.userName} 님이 참가하였습니다. ${currentTime}` ]});
           
         })
       }
@@ -213,9 +194,35 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       this.logger.debug('스트리밍에서 채팅창의 닉네임 입력값 및 room의 id값을 확인하세요!');
     } 
   
-    
   }
-  //=======================================================================================================
+  @SubscribeMessage('exit')
+  exitChatRoom(@ConnectedSocket() mySocket: Socket, @MessageBody() userInfo){
+    this.logger.log('chat exit');
+    console.log(userInfo);
+    try {
+      //1. exit 소켓 제거 
+      this.chattingRoomToSockets[userInfo.roomId] = this.chattingRoomToSockets[userInfo.roomId].filter((joinedSocket) => joinedSocket !== mySocket)
+      //2. 방에서 유저 삭제!
+      
+      this.roomUsers[userInfo.roomId] = this.roomUsers[userInfo.roomId].filter((joinedUser) => joinedUser !== userInfo.userId)
+      if(!this.roomUsers[userInfo.roomId].includes(userInfo.userId)) {
+        this.chattingRoomToSockets[userInfo.roomId].forEach((s:Socket) => {
+          s.emit("exit", { userList: this.roomUsers[userInfo.roomId], userId: userInfo.userId});
+        })
+      } else {
+        return;
+      }
+
+
+
+    } catch (e){
+      this.logger.error('')
+      console.error(e);
+    }
+
+  }
+
+
   /*
    * @Author : OSOOMAN
    * @Date : 24.1.11
@@ -227,10 +234,11 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
              *주의: 사진은 AWS S3의 (goodgang3)bucket에 저장되고 사진을 전송하고 컨트롤러에서 fetch의 결과가 약 20초 소요됩니다. 
     */
   @SubscribeMessage('message') 
-  async handleEvent(@MessageBody() messages,): Promise<void> {
+  async handleEvent(@MessageBody() messages): Promise<void> {
     this.logger.log(`We are receiving a Message: ${messages[0]}`)
     this.logger.log(`We are receiving a Image or Video: ${messages[1]}`)
     this.logger.log(`We are receiving a chattingRoomId: ${messages[2]}`)
+    this.logger.log(`We are receiving a isMe: ${messages[3]}`);
     console.log(messages)
     //룸의 user의 소켓에만 보낸다!
     function formatCurrentTime(): string {
@@ -253,10 +261,9 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
           this.chattingRoomToSockets[messages[2]].forEach((s:Socket) => {
             s.emit('message', new ProfanityFilterPipe().transform(messages[0]));
           })
-
         }
       }
-      const msgObj: object = { msg: filteredMessage, url: messages[1], time: `${currentTime}` };
+      const msgObj: object = { msg: filteredMessage, url: messages[1], time: `${currentTime}`, myEmaiId: messages[3] };
       
       /* client.emit('message', msgObj );  messages: [ 'osoomansour41@naver.com:  goods', '', 'testtyo' ]   */
       this.chattingRoomToSockets[messages[2]].forEach((s:Socket) => {
@@ -264,7 +271,6 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         
       })
       
-
     } catch (e) {
       this.logger.error(`messages의 자료 타입을 확인하세요.`);
       console.error(e);
