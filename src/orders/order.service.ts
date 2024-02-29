@@ -113,35 +113,49 @@ export class OrderService {
     }
 
   }
-  async takeOrders(seller:Member) {
+  //판매자 입장에서 받은 주문 
+  async takeOrders(seller:Member, page:number ) {
     try {
-      const takingOrders = await this.members.findOne({
+      const totalOrders = await this.orders.count({
         where:{
-          userId: seller.userId,
+          seller:{
+            userId: seller.userId
+          }
+        },
+      });
+      const takingOrders = await this.orders.find({
+        where:{
+          seller:{
+            userId: seller.userId,
+          }
         },
         relations:{
-          takingorders:{
-            items:{
-              robot:true
-            },
-            customer:true
+          deal:true,
+          items:{
+            robot: true,
           },
-          
-        }
+          customer:true
+        },
+        skip: (page - 1) * 3,
+        take: 3,
+        order:{
+          id: 'DESC',
+        },
+        cache:true,
       })
-      return takingOrders;
+      return {
+        takingOrders,
+        totalPages: Math.ceil(totalOrders / 3),
+      };
       
     } catch (e) {
       console.error(e);
-      this.logger.log('jwt 확인 또는 판매자 정보를 확인하세요.');
+      this.logger.error('1.jwt 확인 또는 판매자 정보를 확인하세요.');
+      this.logger.error('2.page 파리미터를 확인하세요.')
     }
   }
   
   async storeGoods(savingInput, me:Member) {
-    console.log("me:")
-    console.log(me)
-    
-
     //1. 해당 deal를 찾고 
     const dealId = parseInt(savingInput.dealId);
     const oneDeal = await this.deals.findOne({
@@ -159,32 +173,40 @@ export class OrderService {
     })
     await this.stores.save(newStore);
     
-    
-    
-
   }
 
-  async getStoredGoods(me:Member) {
+  async getStoredGoods(me:Member, page:number) {
     //3. Store 엔티티에 저장된 deal를 join을 통해 참조해서 불러온다. (token만 있으면 담은 물건을 확인이 가능한다! )
-    const mySaving = await this.members.findOne({
+    
+    const mySavings = await this.stores.find({
       where:{
-        userId:me.userId
-         
+        member:{
+          userId:me.userId,
+        }
       },
       relations:{
-        store:{
-          deal:{
-            robot:true,
-            seller:true
-          }
+        deal:{
+          robot:true,
+          seller:true,
         },
+        member:true
       },
-      cache:true,
+      skip: (page - 1) * 3,
+      take:3,
     })
-    this.logger.log("storeGoods에서 나의 mySaving 확인:")
-    console.log(mySaving)
-
-    return mySaving;
+    const totalSavings = await this.stores.count({
+      where:{
+        member:{
+          userId:me.userId
+        }
+      }
+    })
+    this.logger.log("storeGoods에서 나의 totalSavings 확인:")
+    console.log(totalSavings);
+    return {
+      mySavings,
+      totalPage: Math.ceil(totalSavings / 3),
+    };
   }
   
   async deleteStoredGoods(storageId:number) {
@@ -193,6 +215,4 @@ export class OrderService {
       
     })
   }
-  
-  
 }

@@ -213,8 +213,6 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         return;
       }
 
-
-
     } catch (e){
       this.logger.error('')
       console.error(e);

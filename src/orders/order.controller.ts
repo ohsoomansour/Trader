@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {  Controller, Delete, Get, Logger, Param, Post, Req } from '@nestjs/common';
-import { OrderService } from './order.servie';
+import { OrderService } from './order.service';
 
 
 @Controller('order')
@@ -28,10 +28,13 @@ export class OrderController {
     return this.orderService.getMyOrder(customer); 
   }
   //@Explain: 판매자 입장, 고객 주문 확인 
-  @Get('/takeorders')
-  takeOrders(@Req() req: Request) {
+  @Get('/takeorders/:page')
+  takeOrders(@Req() req: Request, @Param('page') page:number) {
+    this.logger.log('takeorders');
+    console.log(page);
     const seller = req['member']
-    return this.orderService.takeOrders(seller)
+    return this.orderService.takeOrders(seller, page);
+
   }
 
   @Post('/storegoods')
@@ -40,10 +43,10 @@ export class OrderController {
     return this.orderService.storeGoods(req.body, me);
   }
 
-  @Get('/getstoredgoods')
-  getStoredGoods(@Req() req: Request){
+  @Get('/getstoredgoods/:page')
+  getStoredGoods(@Req() req: Request, @Param('page') page:number){
     const me = req['member'];
-    return this.orderService.getStoredGoods(me)
+    return this.orderService.getStoredGoods(me, page)
   }
 
   @Delete('/deletestoredgoods/:storageId')

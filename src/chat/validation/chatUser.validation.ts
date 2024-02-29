@@ -5,8 +5,6 @@ import { ChatUserDto } from "../dtos/chat-user.dto";
 import { Injectable} from "@nestjs/common";
 
 
-
-
 @Injectable()
 export class ChatValidation { //userInfo.roomId,
    async validateUserDto(userInfo: ChatUserDto) {
