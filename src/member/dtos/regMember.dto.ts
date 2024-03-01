@@ -24,6 +24,7 @@ export class CreateMemberInput
   address: string;
   memberRole: MemberRole;
   name:string;
+  mobile_phone:string;
 }
 
 export class CreateMemberOutput extends CoreOutput

@@ -95,15 +95,18 @@ export class Member extends CoreEntity {
   @Column()
   userId: string;
   
-  @Column({select: false})
+  @Column({select:false})
   password: string;
 
-  @Column({nullable : true})
+  @Column({nullable:true})
   name: string;
 
-  @Column({nullable : true})
+  @Column({nullable:true})
   address: string;
+  @Column({nullable:true})
 
+  mobile_phone:string;
+  
   @Column({nullable:true})
   memberRole: string;
 

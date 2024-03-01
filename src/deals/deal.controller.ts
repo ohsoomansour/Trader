@@ -15,13 +15,15 @@ export class DealController {
   @Post('/make-deal')
 
   async makeADeal(
-    @Body() {compa_name, compaBrand_ImgURL, seller, seller_address, name, price, maintenance_cost, description, rbURL}
+    @Body() {compa_name, compaBrand_ImgURL, seller, mobile_phone, seller_address, name, price, maintenance_cost, description, rbURL}
   ){
     this.logger.log("DealController requsetBody:")
     const numPrice = parseFloat(price)
     const numMaintenance_cost = parseFloat(maintenance_cost)
-    console.log(compa_name, compaBrand_ImgURL, seller, name, numPrice, description, numMaintenance_cost, rbURL);
-    return this.dealService.makeADeal(compa_name, compaBrand_ImgURL, seller, seller_address, name, numPrice, numMaintenance_cost, description ,rbURL)
+    const salesManager_mobilephone = parseFloat(mobile_phone)
+    this.logger.log('/make-deal')
+    console.log(mobile_phone);
+    return this.dealService.makeADeal(compa_name, compaBrand_ImgURL, seller, salesManager_mobilephone, seller_address, name, numPrice, numMaintenance_cost, description ,rbURL)
   }
 
   @Get('/getallDeals')

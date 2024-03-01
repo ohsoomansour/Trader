@@ -19,6 +19,9 @@ export class Deal extends CoreEntity {
   @Column({nullable: true})
   compaBrand_ImgURL:string;
 
+  @Column({nullable:true})
+  salesManager_mobilephone:number;
+
   @Length(3)
   @ManyToOne(
     () => Member,

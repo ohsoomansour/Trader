@@ -36,6 +36,10 @@ export class Order extends CoreEntity {
     
   )
   seller:Member;
+
+  @Column({nullable:true})
+  salesManager_mobile_phone:string;
+
     
   @Column()  
   address: string;

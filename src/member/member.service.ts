@@ -82,6 +82,7 @@ export class MemberService {
     password,
     name,
     address,
+    mobile_phone,
     memberRole,
   }: CreateMemberInput): Promise<CreateMemberOutput> {
     try {
@@ -97,8 +98,8 @@ export class MemberService {
           password,
           name,
           address,
+          mobile_phone,
           memberRole,
-          
         }),
       );
       await this.verification.save(

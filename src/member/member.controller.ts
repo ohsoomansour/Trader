@@ -46,7 +46,6 @@ export class MemberController {
     this.memberService = memberService;
   }
   private logger = new Logger('memberController');
-
   /*
    * @Author : OSOOMAN
    * @Date : 2024.1.7
@@ -67,12 +66,13 @@ export class MemberController {
    * @Return : object
    * @Explain : 클라인트에서 회원가입 POST REQUEST에 대한 처리
    */
-  @Post('/join')
+  @Post('/join') //, @Res() res: Response
   signUpForMembership(@Req() req: Request, @Res() res: Response) {
     try {
       console.log('join에 들어오나');
+      const BASE_PATH = 'http://localhost:3001';
       this.memberService.signUpForMembership(req.body);
-      return res.redirect('http://localhost:3001/');
+      return res.redirect(`${BASE_PATH}/login`);
     } catch {
       console.error();
     }

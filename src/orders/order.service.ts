@@ -70,6 +70,7 @@ export class OrderService {
       const newOrder = this.orders.create({
         deal,
         seller,
+        salesManager_mobile_phone:orderInput.salesManager_mobile_phone,
         customer,
         address: orderInput.address,
         status: OrderStatus.Pending, //서버에서 준비중 기본값 
