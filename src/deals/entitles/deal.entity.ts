@@ -20,7 +20,7 @@ export class Deal extends CoreEntity {
   compaBrand_ImgURL:string;
 
   @Column({nullable:true})
-  salesManager_mobilephone:number;
+  salesManager_mobilephone:string;
 
   @Length(3)
   @ManyToOne(

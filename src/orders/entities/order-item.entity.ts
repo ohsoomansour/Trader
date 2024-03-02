@@ -8,7 +8,6 @@ export class RobotOption {
   maintenanceYN:boolean;
   maintenance_cost: number;
 }
-
 @Entity()
 export class OrderItem extends CoreEntity{
   @ManyToOne(

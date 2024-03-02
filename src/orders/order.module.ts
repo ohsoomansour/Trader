@@ -12,7 +12,7 @@ import { Store } from './entities/store.entity';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order, OrderItem, Robot, Deal, Member, OrderItem, Store])],
+  imports: [TypeOrmModule.forFeature([Order, OrderItem, Robot, Deal, Member, Store])],
   controllers:[OrderController],
   providers:[OrderService]
 })

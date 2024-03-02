@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import {  Controller, Delete, Get, Logger, Param, Post, Req } from '@nestjs/common';
+import {  Body, Controller, Delete, Get, Logger, Param, Post, Req } from '@nestjs/common';
 import { OrderService } from './order.service';
+import { StoreGoodsInputDTO } from './dtos/store-goods.dto';
 
 
 @Controller('order')
@@ -19,13 +20,11 @@ export class OrderController {
   }
 
   //@Explain:고객 입장, 나의 주문 확인 
-  @Get('/info')  
-  getMyOrder(@Req() req:Request) {
+  @Get('/info/:page')  
+  getMyOrder(@Req() req:Request, @Param('page') page) {
     const customer = req['member'];
-    this.logger.log('/order/info/ 경로, who am I? ')
-    console.log(customer);
 
-    return this.orderService.getMyOrder(customer); 
+    return this.orderService.getMyOrder(customer, page); 
   }
   //@Explain: 판매자 입장, 고객 주문 확인 
   @Get('/takeorders/:page')
@@ -36,11 +35,18 @@ export class OrderController {
     return this.orderService.takeOrders(seller, page);
 
   }
-
-  @Post('/storegoods')
-  storeGoods(@Req() req: Request){
+  /*@Author: osooman 
+   *@Params: StoreGoodsInputDTO 참고
+   *@Function: 구입 하기 전 담기의 기능을 한다.  
+   *@Explain: F/E에서 보낸 데이터가 JSON 형식이라면 서버에서 해당 JSON을 파싱하여 StoreGoodsInputDTO로 변환이 필요하고 따라서 Body데코리에터가 매핑 기능을 하므로 추가  
+  */
+  @Post('/storegoods')   
+  storeGoods(@Req() req: Request, @Body() storeGoodsInput:StoreGoodsInputDTO){
+    this.logger.log('storegoods의 me & storeGoodsInput:');
     const me = req['member'];
-    return this.orderService.storeGoods(req.body, me);
+    console.log(me, storeGoodsInput);
+    
+    return this.orderService.storeGoods(storeGoodsInput, me);
   }
 
   @Get('/getstoredgoods/:page')
