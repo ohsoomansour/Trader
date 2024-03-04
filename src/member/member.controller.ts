@@ -16,8 +16,8 @@ import { Request, Response } from 'express';
 import { Member } from './entites/member.entity';
 import { Role } from 'src/auth/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { CupdateMemberInfo } from './dtos/updateMember.dto';
-import { LoginOutput } from './dtos/login.dto';
+import { CupdateMemberInfoDTO } from './dtos/updateMember.dto';
+//import { LoginOutputDTO } from './dtos/login.dto';
 /*#SESSION  COOKIE란? 
  session({secret: 'SESSION_ID_SM' - "This is the secret used to sign the session cookie" })
   [세션의 동작 방식]
@@ -98,13 +98,11 @@ export class MemberController {
     //#주의 사항: @Body 또는 아래 @Req req 둘 중 하나만 써야된다
     //@Body() loginInfo,
     @Req() req: Request,
-    //@Res() res: Response,
-  ): Promise<LoginOutput> {
+    @Res() res: Response,
+  ): Promise<void> {
     try {
-      console.log(req.body); // {} & 다른 아이디가 남아있어 member entity 업데이트가 안되는 것으로 보임
       const result = await this.memberService.login(req.body);
-      this.logger.log(`login reuslt token`);
-      console.log(result);
+
       if (result.ok) {
         //#세션 설정
         const session: any = req.session;
@@ -112,35 +110,46 @@ export class MemberController {
         session.user = req.body.userId; //사용자가 정의한 임의의 지정 값2
         const memberRole = await this.memberService.getMemberRole(req.body);
         session.memberRole = memberRole;
-        this.logger.log(`유저의 Role은 ${session.memberRole.memberRole}`);
+        session.sessionID = 'osm';
         session.cookie.maxAge = 5 * 1000 * 60; //만료 시간 : 5분
+        session.cookie.httpOnly = true;
+        session.cookie.secure = true;
         this.logger.log(`${session.user} 회원님이 로그인이 하였습니다.`);
-        this.logger.log(`logIn에서 세션을 확인:`);
+        console.log(session);
         //#로그인 후 활동 추적
         await this.memberService.trackUserActivity(req.body.userId);
-        //res.redirect('http://localhost:3001/');
-        return result;
+        //res.status(200).json(result);
+        //res.status(200).send(result);
+        //res.status(HttpStatus.OK).send(result);
+        res.set('Access-Control-Allow-Credentials', 'true');
+        res.status(HttpStatus.OK).send(result);
       }
     } catch (e) {
       console.error(e);
       this.logger.error(
-        `this.memberService.login의 반환하는 result.ok 값이 true가 아닙니다.`,
+        'this.memberService.login의 반환하는 result.ok 값이 true가 아닙니다.',
       );
-      this.logger.debug(`로그인 아이디와 비밀번호를 확인하세요!`);
+      this.logger.debug('로그인 아이디와 비밀번호를 확인하세요!');
     }
   }
-
+  /*
+   * @Author : OSOOMAN
+   * @Date : 2024.1.17
+   * @Function : 유저의 정보를 가져온다.
+   * @Parm : jwt middleware에서 넘겨 받은 request
+   * @Return : jwt토큰을 통해 디코딩된 나의 대한 정보 값을 반환
+   * @Explain : Who am i?
+   */
   @Role(['any'])
   @Get('/getmyinfo')
   async getMyInfo(@Req() req: Request): Promise<Member> {
     try {
       const member = req['member'];
-      this.logger.log('getMyInfo 경로의 member값:');
-      console.log(member);
       return member;
     } catch (e) {
       console.error(e);
-      throw new Error('Failed to fetch user information');
+      this.logger.error('나의 대한 정보가 업습니다.');
+      this.logger.debug('header에 x-jwt 값을 확인하세요!');
     }
   }
 
@@ -156,17 +165,15 @@ export class MemberController {
   @Patch('/update/:id')
   async editProfile(
     @Param('id') id: number,
-    @Body() editInfo: CupdateMemberInfo,
+    @Body() editInfo: CupdateMemberInfoDTO,
   ) {
-    this.logger.log('update/id에 id는 뭐지?');
-    console.log(id);
     try {
       const user = await this.memberService.editProfile(id, editInfo);
-      this.logger.log('Client의 editInfo:');
-      console.log(user);
       return user;
     } catch (e) {
       console.error(e);
+      this.logger.error('나의 프로필을 수정할 수 없습니다. ');
+      this.logger.debug('파라미터 id 값 또는 수정 값을 확인하세요! ');
     }
   }
 
@@ -183,8 +190,13 @@ export class MemberController {
    */
   @Patch('activate/:userid')
   async activateUser(@Param('userid') id: string): Promise<Member | undefined> {
-    const activatedUser = await this.memberService.activateUser(id);
-    return activatedUser;
+    try {
+      const activatedUser = await this.memberService.activateUser(id);
+      return activatedUser;
+    } catch (e) {
+      this.logger.error('사용자의 계정을 활성화할 수 없습니다.');
+      this.logger.debug('parameter userid 값을 확인하세요.');
+    }
   }
 
   /*

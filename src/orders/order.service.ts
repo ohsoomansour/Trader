@@ -3,13 +3,13 @@ import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Order } from "./entities/order.entity";
 import { Repository } from "typeorm";
-import { OrderOutputDTO } from "./dtos/order.dto";
+import { OrderInputDTO, OrderOutputDTO } from "./dtos/order.dto";
 import { Member } from "src/member/entites/member.entity";
 import { Deal } from "src/deals/entitles/deal.entity";
 import { Robot } from "src/deals/entitles/robot.entity";
 import { OrderItem } from "./entities/order-item.entity";
 import { Store } from "./entities/store.entity";
-import { getOrderOutputDTO } from "./dtos/get-order.dto";
+import { GetOrderOutputDTO } from "./dtos/get-order.dto";
 import { TakeOrderOutput } from "./dtos/take-order.dto";
 import { StoreGoodsInputDTO } from "./dtos/store-goods.dto";
 import { GetStoredGoodsOutputdDTO } from "./dtos/get-storedgoods.dto";
@@ -44,7 +44,7 @@ export class OrderService {
   ){}  
   private logger = new Logger('OrderService')
 
-  async makeaOrder(orderInput, customer: Member):Promise<OrderOutputDTO>{
+  async makeaOrder(orderInput:OrderInputDTO, customer: Member):Promise<OrderOutputDTO>{
     try{
       //entity 
       const deal = await this.deals.findOne({
@@ -89,8 +89,8 @@ export class OrderService {
       console.error(e);
     }
   }
-
-  async getMyOrder(customer:Member, page:number):Promise<getOrderOutputDTO> {
+  //
+  async getMyOrder(customer:Member, page:number):Promise<GetOrderOutputDTO> {
     try {
     //나의 주문 정보가 뜬다. 
     const totalSavings = await this.orders.count({
@@ -100,7 +100,7 @@ export class OrderService {
         }
       }
     })
-    
+    console.log("totalSavings",totalSavings);
     const myOrders = await this.orders.find({
       where:{
         customer:{
@@ -120,7 +120,7 @@ export class OrderService {
         id:'DESC'
       }
     })
-
+    
     return {
       myOrders,
       totalPages: Math.ceil(totalSavings / 3)
@@ -161,6 +161,45 @@ export class OrderService {
         },
         cache:true,
       })
+      /*
+            [
+        [
+          Order { total: 10100 },
+          Order { total: 10000 },
+          Order { total: 10000 },
+          Order { total: 10000 },
+          Order { total: 10100 },
+          Order { total: 10100 },
+          Order { total: 10000 },
+          Order { total: 10000 },
+          Order { total: 10000 },
+          Order { total: 7000 },
+          Order { total: 10000 },
+          Order { total: 10000 }
+        ],
+        12
+      ]*/
+      this.logger.log('takingOrders:')
+      //총 건수
+      const salesCount = await this.orders.count({
+        where:{
+          seller:{
+            userId:seller.userId
+          }
+        },
+        select:['total']
+      })
+
+      const order = this.orders.createQueryBuilder('order');
+      const totalAmount = await order
+      .select("SUM(order.total)", "total")
+      .leftJoin("order.seller", "seller")
+      .where("seller.userId = :userId", { userId: seller.userId }) // seller의 userId값으로 필터링
+      .getRawOne();
+       this.logger.log('salesCount & totalAmount:');
+       console.log(salesCount, totalAmount);
+      
+
       return {
         takingOrders,
         totalPages: Math.ceil(totalOrders / 3),

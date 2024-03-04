@@ -53,11 +53,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from './entites/member.entity';
-import { CreateMemberInput, CreateMemberOutput } from './dtos/regMember.dto';
-import { LoginInput, LoginOutput, MemberRole } from './dtos/login.dto';
+import { CreateMemberInputDTO, CreateMemberOutputDTO } from './dtos/regMember.dto';
+import { LoginInputDTO, MemberRole } from './dtos/login.dto';
 import { JwtService } from 'src/jwt/jwt.service';
 import { MemberProfileOutput } from './dtos/member.profile.dto';
-import { CupdateMemberInfo, CupdateMemberOutput } from './dtos/updateMember.dto';
+import { CupdateMemberInfoDTO, CupdateMemberOutputDTO } from './dtos/updateMember.dto';
 import { Verification } from './entites/verification.entity';
 
 @Injectable()
@@ -84,7 +84,7 @@ export class MemberService {
     address,
     mobile_phone,
     memberRole,
-  }: CreateMemberInput): Promise<CreateMemberOutput> {
+  }: CreateMemberInputDTO): Promise<CreateMemberOutputDTO> {
     try {
       //이 아이디가 존재 하는 지 검사 필요
       const idExist = await this.members.findOne({ where: { userId } });
@@ -125,7 +125,8 @@ export class MemberService {
    * @Explain : 세션을 가지고 로그인을 한다.
    * @개선 필요🔺: 불필요한 세션을 줄이기 위한 방법은 ?
    */
-  async login({ userId, password }: LoginInput): Promise<LoginOutput> {
+  //: Promise<LoginOutputDTO>
+  async login({ userId, password }: LoginInputDTO) {
     try {
       /*#DOC: findOne(id) signature was dropped. Use following syntax instead:
         findOne, findOneOrFail, find, count, findAndCount methods now only accept FindOptions as parameter, e.g.: 
@@ -161,7 +162,7 @@ export class MemberService {
     }
   }
   //주의: 리턴 타입 Promise<memberType>에서 memberType(DTO)로 하면 계속 Promise { <pending> }
-  async getMemberRole({ userId }: LoginInput): Promise<MemberRole> {
+  async getMemberRole({ userId }: LoginInputDTO): Promise<MemberRole> {
     try {
       const member = await this.members.findOne({
         where: { userId },
@@ -199,8 +200,8 @@ export class MemberService {
   }
   async editProfile(
     id: number,
-    { userId, password, address }: CupdateMemberInfo,
-  ): Promise<CupdateMemberOutput> {
+    { userId, password, address }: CupdateMemberInfoDTO,
+  ): Promise<CupdateMemberOutputDTO> {
     try {
       const user = await this.members.findOne({
         where: { id: id },
@@ -247,8 +248,8 @@ export class MemberService {
    * @Author : OSOOMAN
    * @Date : 2024.1.6
    * @Function : (마지막 로그인 시점부터?) 휴면 상태 추적 및 설정
-   * @Parm :
-   * @Return :
+   * @Parm : user의 email 아이디 
+   * @Return : -
    * @Explain : 일정 시간 이상이 지나면 휴면 계정으로 전환하는 비즈니스 로직
      - createBuilder 사용
   */

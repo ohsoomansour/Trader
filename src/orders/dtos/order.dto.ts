@@ -5,10 +5,12 @@ import { Order } from "../entities/order.entity";
 
 export class OrderInputDTO {
   dealId: number;
+  seller:string;
+  salesManager_mobile_phone:string;
   customer: string;
   address: string;
-  description:string;
   items: OrderItem;
+  total:number;
 }
 
 export class OrderOutputDTO extends CoreOutput {

@@ -6,7 +6,7 @@ import { Deal } from "./entitles/deal.entity";
 import { Repository } from "typeorm";
 import { Member } from "src/member/entites/member.entity";
 import { Robot } from "./entitles/robot.entity";
-
+import { MakeADealInputDTO } from "./dtos/make-deal.dto";
 
 @Injectable()
 export class DealService {
@@ -19,41 +19,34 @@ export class DealService {
     private readonly robots: Repository<Robot>
   ) {}
 
-  async makeADeal(
-    //robot entity가 등록이 되어있어야된다. (아래의 경우)
-    compa_name, compaBrand_ImgURL, sellerId, salesManager_mobilephone, seller_address, name, price, maintenance_cost, description, rbURL
-    
-  ): Promise<void> {
+  async makeADeal(makingDealInput:MakeADealInputDTO): Promise<void> {
     try {
-
-    const sellMember = await this.members.findOne({where: {userId: sellerId}})
+    const sellMember = await this.members.findOne({where: {userId: makingDealInput.sellerId}})
     const newRobot = this.robots.create({
-      name,
-      price,    
-      maintenance_cost,    //undefined
-      description,
-      rbURL
+      name:makingDealInput.name,
+      price:makingDealInput.price,    
+      maintenance_cost:makingDealInput.maintenance_cost,    
+      description:makingDealInput.description,
+      rbURL:makingDealInput.rbURL
     })
 
     await this.robots.save(newRobot);
-
     await this.deals.save(
       this.deals.create({
-        compa_name, //undefined
-        seller_address,
-        compaBrand_ImgURL,
+        compa_name:makingDealInput.compa_name, 
+        seller_address:makingDealInput.seller_address,
+        compaBrand_ImgURL:makingDealInput.compaBrand_ImgURL,
         seller:sellMember,
-        salesManager_mobilephone,
+        salesManager_mobilephone: makingDealInput.salesManager_mobilephone,
         robot: newRobot
       })
     )
     } catch (e) {
       console.error(e);
     } 
-
   }
 
-  async getAllDeal() {
+  async getAllDeal():Promise<Deal[]> {
     try {
       const allDeals = await this.deals.find({
         order: {
@@ -69,6 +62,5 @@ export class DealService {
     } catch (e) {
     }
   }
-
 
 }

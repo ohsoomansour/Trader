@@ -1,24 +1,18 @@
 /* eslint-disable prettier/prettier */
 
-import { CoreOutput } from "src/common/dtos/output.dto";
 
-/*
-export class Robot {
+//compa_name, compaBrand_ImgURL, sellerId, salesManager_mobilephone, seller_address, name, price, maintenance_cost, description, rbURL
+export class MakeADealInputDTO  {
+  compa_name:string;
+  compaBrand_ImgURL:string;
+  mobile_phone:string;
+  sellerId:string;
+  salesManager_mobilephone:string;
+  seller_address:string;
   name:string;
-  price: number;
-  description: string;
-  rb_glbURL: string;
-}
-*/
-
-export class MakeADealInput  {
-  seller:string;
-  name:string;
-  price: number;
-  description: string;
-  rgb3D_glb: string;
+  price:number;
+  maintenance_cost:number;
+  description:string;
+  rbURL:string;
 }
 
-export class MakeADealOutput extends CoreOutput {
-
-} 

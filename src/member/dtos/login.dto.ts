@@ -3,7 +3,7 @@
 import { IsNotEmpty, IsString } from "class-validator";
 import { CoreOutput } from "src/common/dtos/output.dto";
 
-export class LoginInput {
+export class LoginInputDTO {
   @IsString()
   @IsNotEmpty()
   userId: string;
@@ -14,7 +14,7 @@ export class LoginInput {
 }
 
 
-export class LoginOutput extends CoreOutput{
+export class LoginOutputDTO extends CoreOutput{
   token?:string;
 }
 

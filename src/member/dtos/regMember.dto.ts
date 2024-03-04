@@ -15,7 +15,7 @@ import { MemberRole } from "../entites/member.entity";
     1.레퍼지토리.create(dto) > .save > DB에 저장
     2.테스트 : insomnia에서 POST REQUEST BODY에 담아서 보내면 컨트롤러(BODY) -> 비즈니스 로직 처리 및 반환 
   */
-export class CreateMemberInput
+export class CreateMemberInputDTO
 {
   @IsString()
   @IsEmail() 
@@ -27,7 +27,4 @@ export class CreateMemberInput
   mobile_phone:string;
 }
 
-export class CreateMemberOutput extends CoreOutput
-{
-  
-}
+export class CreateMemberOutputDTO extends CoreOutput{}

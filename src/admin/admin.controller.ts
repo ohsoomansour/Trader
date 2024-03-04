@@ -16,7 +16,7 @@ import { AdminService } from './admin.service';
 import { MyParamPipe } from './validation/admin-memberParam.pipe';
 import { Role } from 'src/auth/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { AupdateMemberInfo } from 'src/member/dtos/updateMember.dto';
+import { AupdateMemberInfoDTO } from 'src/member/dtos/updateMember.dto';
 //import { Role } from 'src/auth/role.decorator';
 /* ******************************* 🚨route 주의사항 ********************************* 
   if)요청: http://localhost:3000/admin/search?test 의 경우
@@ -105,7 +105,7 @@ export class AdminController {
   @Patch('/update/:id')
   updateMemeberInfo(
     @Param('id', MyParamPipe) id: number,
-    @Body() memberInfo: AupdateMemberInfo,
+    @Body() memberInfo: AupdateMemberInfoDTO,
   ) {
     return this.adminService.editProfile(id, memberInfo);
   }
@@ -131,7 +131,7 @@ export class AdminController {
    * @Author : OSOOMAN
    * @Date : 2023.12.24
    * @Function : redirect
-   * @Parm :
+   * @Parm : 없음
    * @Return : redirection
    * @Explain : 아래 세션의 예시를 확인을 통해 회원의 역할이 관리자가 아니면 전체 회원이 사용하는 home으로 이동
    * Session {

@@ -55,13 +55,20 @@ async function bootstrap() {
   //app.useWebSocketAdapter(redisIoAdapter); //redis 소켓
   //app.useWebSocketAdapter(new WsAdapter(app)); //웹소켓 어댑터
   app.useWebSocketAdapter(new IoAdapter(app)); // socket.io 어댑터
-  app.enableCors({ origin: '*' }); //{ origin:true,credentials: true,}
+  app.enableCors({ origin: '*', credentials: true }); //{ origin:true,credentials: true,}
 
   app.use(
     session({
       secret: 'SESSION_ID_SM', //세션아이디
       resave: false, //request 중에 세션이 수정되지 않아도 세션을 세션 저장소에 다시 저장하도록 강제
       saveUninitialized: false, //초기화되지 않는 세션을 저장하게 함
+      name: 'session-cookie',
+      cookie: {
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: 5300000,
+        secure: true,
+      },
     }),
     json({ limit: '50mb' }),
     urlencoded({ limit: '50mb', extended: true }),

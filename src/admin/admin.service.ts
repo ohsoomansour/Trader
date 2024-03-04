@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AupdateMemberInfo } from 'src/member/dtos/updateMember.dto';
+import { AupdateMemberInfoDTO } from 'src/member/dtos/updateMember.dto';
 import { Member } from 'src/member/entites/member.entity';
 import { Like, Repository } from 'typeorm';
 /*constructor(private readonly usersService: UsersService ) {}
@@ -57,7 +57,7 @@ export class AdminService {
   //#admin이 회원의 정보를 변경 할 수 있는 권한 기능
   async editProfile(
     memberId: number,
-    { address, memberRole }: AupdateMemberInfo,
+    { address, memberRole }: AupdateMemberInfoDTO,
   ): Promise<Member> {
     try {
       const member = await this.members.findOne({
