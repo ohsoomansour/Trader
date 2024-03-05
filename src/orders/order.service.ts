@@ -161,7 +161,7 @@ export class OrderService {
         },
         cache:true,
       })
-      /*
+      /* findAndCount 메서드로 할경우 
             [
         [
           Order { total: 10100 },
@@ -191,18 +191,21 @@ export class OrderService {
       })
 
       const order = this.orders.createQueryBuilder('order');
-      const totalAmount = await order
-      .select("SUM(order.total)", "total")
-      .leftJoin("order.seller", "seller")
-      .where("seller.userId = :userId", { userId: seller.userId }) // seller의 userId값으로 필터링
-      .getRawOne();
-       this.logger.log('salesCount & totalAmount:');
-       console.log(salesCount, totalAmount);
+      const totalSales = await order
+        .select("SUM(order.total)", "total")
+        .leftJoin("order.seller", "seller")
+        .where("seller.userId = :userId", { userId: seller.userId }) // seller의 userId값으로 필터링
+        .getRawOne();
+       this.logger.log('salesCount & totalSales:');
+       console.log(salesCount, totalSales);
       
 
       return {
         takingOrders,
         totalPages: Math.ceil(totalOrders / 3),
+        salesCount:salesCount,
+        totalSales:totalSales.total
+        
       };
       
     } catch (e) {
@@ -247,6 +250,9 @@ export class OrderService {
       },
       skip: (page - 1) * 3,
       take:3,
+      order:{
+        id: 'DESC',
+      },
     })
     const totalSavings = await this.stores.count({
       where:{
