@@ -274,4 +274,26 @@ export class OrderService {
       id:storageId,
     })
   }
+
+  async updateOrderStatus(orderId:number):Promise<void> {
+    try {
+      const seletedOrder = await this.orders.findOne({
+        where:{
+          id:orderId
+        }
+      })
+      if(seletedOrder.status === OrderStatus.Pending){
+        seletedOrder.status = OrderStatus.ReadyForDelivery;
+      } else if(seletedOrder.status === OrderStatus.ReadyForDelivery) {
+        seletedOrder.status = OrderStatus.InDelivery;
+      } else if(seletedOrder.status === OrderStatus.InDelivery){
+        seletedOrder.status = OrderStatus.OrderCompleted;
+      } 
+      await this.orders.save(seletedOrder);
+      
+    } catch (e) {
+      console.error(e);
+    }
+    
+  }
 }

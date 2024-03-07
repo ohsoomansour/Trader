@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {  Body, Controller, Delete, Get, Logger, Param, Post, Req } from '@nestjs/common';
+import {  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Req } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { StoreGoodsInputDTO } from './dtos/store-goods.dto';
 import { OrderInputDTO } from './dtos/order.dto';
@@ -84,4 +84,15 @@ export class OrderController {
     console.log(storageId)
     this.orderService.deleteStoredGoods(storageId);
   }
+
+ /*@Author: osooman 
+  *@Param: 주문 id  
+  *@Function: 상품의 주문 상태를 변경한다. 
+  *@return: -
+  *@Explain: 클라이언트(공급자)가 주문 id를 넘겨주고 해당 주문 건의 상태변경을 실행한다.       
+  */
+ @Patch('/update_orderstatus/:orderId')
+ updateOrderStatus(@Param('orderId') orderId:number){
+  return this.orderService.updateOrderStatus(orderId);
+ }
 }
