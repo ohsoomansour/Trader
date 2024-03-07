@@ -287,13 +287,27 @@ export class OrderService {
       } else if(seletedOrder.status === OrderStatus.ReadyForDelivery) {
         seletedOrder.status = OrderStatus.InDelivery;
       } else if(seletedOrder.status === OrderStatus.InDelivery){
-        seletedOrder.status = OrderStatus.OrderCompleted;
+        seletedOrder.status = OrderStatus.DeliveryCompleted
       } 
       await this.orders.save(seletedOrder);
       
     } catch (e) {
+      this.logger.error('해당 주문 상태를 업데이트할 수 없습니다.');
+      this.logger.error('주문 id 확인이 필요합니다.')
       console.error(e);
     }
     
+  }
+
+  async cancelMyOrder(orderId:number):Promise<void>{
+    try{
+      await this.orders.delete({
+        id:orderId,
+      })
+    }catch(e){
+      console.error(e);
+      this.logger.error('해당 주문을 삭제할 수 없습니다.');
+      this.logger.error('주문 id 확인이 필요합니다.')
+    }
   }
 }

@@ -95,4 +95,15 @@ export class OrderController {
  updateOrderStatus(@Param('orderId') orderId:number){
   return this.orderService.updateOrderStatus(orderId);
  }
+
+ /*@Author: osooman 
+  *@Param: 주문 id  
+  *@Function: 고객 자신의 주문을 취소한다. 
+  *@return: -
+  *@Explain: 고객의 주문 id를 파라미터로 받고 해당 주문 건을 취소한다. 
+  */
+ @Delete('/cancel_myorder/:orderId')
+ cancelMyOrder(@Param('orderId') orderId:number ){
+  return this.orderService.cancelMyOrder(orderId);
+ }
 }
