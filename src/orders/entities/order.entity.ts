@@ -56,4 +56,7 @@ export class Order extends CoreEntity {
   
   @Column({nullable:true})
   total: number;
+
+  @Column({nullable:true})
+  deliveryCompleted_date:string;
 }

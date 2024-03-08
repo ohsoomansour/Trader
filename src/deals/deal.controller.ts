@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 
-import { Body, Controller, Get, Logger, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Post, Req } from "@nestjs/common";
 import { DealService } from "./deal.service";
 import { Role } from "src/auth/role.decorator";
 import { MakeADealInputDTO } from "./dtos/make-deal.dto";
+import { Member } from "src/member/entites/member.entity";
 
 @Controller('/seller')
 export class DealController {
@@ -37,7 +38,31 @@ export class DealController {
   @Role(['any'])
   @Get('/getallDeals')
   getAllDeals() {
-    return this.dealService.getAllDeal();
+    return this.dealService.getAllDeals();
+  }
+  /*@Author: osooman
+   *@Function: 본인이 등록한 거래를 모두 가져온다.  
+   *@Param: jwt middleware로 부터 넘겨 받은 request의 member  
+   *@return:  Promise<Deal[]>으로 본인이 등록한 상품들을 가져온다. 
+   *@Explain: role은 회원의 등급 client 또는 admin에 관계없이  
+   */
+  @Role(['any'])
+  @Get('/getMyDeals')
+  getMyDeals(@Req() req:Request){
+    const me:Member = req['member'];
+    this.logger.log('getMyDeals')
+    console.log(me)
+    return this.dealService.getMyDeals(me)
+  }
+  /*@Author: osooman
+   *@Function: 본인이 등록한 거래를 삭제한다.  
+   *@Param: token 
+   *@return:  - 
+   *@Explain: role은 회원의 등급 client 또는 admin에 관계없이  
+   */
+  @Delete('/delMydeal/:dealId')
+  deleteMyDeal(@Param('dealId') dealId:number){
+    return this.dealService.delMyDeal(dealId)
   }
 
 }

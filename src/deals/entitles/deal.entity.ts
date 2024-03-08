@@ -10,9 +10,7 @@ import { Store } from "src/orders/entities/store.entity";
 
 @Entity()
 export class Deal extends CoreEntity {
-  push() {
-    throw new Error("Method not implemented.");
-  }
+
   @Column({nullable:true})
   compa_name:string;
 
@@ -26,7 +24,6 @@ export class Deal extends CoreEntity {
   @ManyToOne(
     () => Member,
     member => member.deal,
-    
   )
   seller: Member;
   @RelationId((deal:Deal) => deal.seller)

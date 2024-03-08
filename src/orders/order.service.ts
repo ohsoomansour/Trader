@@ -118,7 +118,8 @@ export class OrderService {
       take:3,
       order:{
         id:'DESC'
-      }
+      },
+      cache:true,
     })
     
     return {
@@ -159,7 +160,10 @@ export class OrderService {
         order:{
           id: 'DESC',
         },
-        cache:true,
+        cache:{
+          id:'takingOrders_cache',
+          milliseconds:6000,
+        }
       })
       /* findAndCount 메서드로 할경우 
             [
@@ -187,7 +191,8 @@ export class OrderService {
             userId:seller.userId
           }
         },
-        select:['total']
+        select:['total'],
+        cache:true,
       })
 
       const order = this.orders.createQueryBuilder('order');
@@ -253,6 +258,10 @@ export class OrderService {
       order:{
         id: 'DESC',
       },
+      cache:{
+        id:'getStoredGoods_cache',
+        milliseconds:6000,
+      }
     })
     const totalSavings = await this.stores.count({
       where:{
@@ -277,6 +286,13 @@ export class OrderService {
 
   async updateOrderStatus(orderId:number):Promise<void> {
     try {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear(); 
+      const month = currentDate.getMonth() + 1; 
+      const day = currentDate.getDate(); 
+      const hours = currentDate.getHours(); 
+      const minutes = currentDate.getMinutes();
+      const ampm = hours >= 12 ? 'pm' : 'am';
       const seletedOrder = await this.orders.findOne({
         where:{
           id:orderId
@@ -288,6 +304,9 @@ export class OrderService {
         seletedOrder.status = OrderStatus.InDelivery;
       } else if(seletedOrder.status === OrderStatus.InDelivery){
         seletedOrder.status = OrderStatus.DeliveryCompleted
+        //주문 완료 날짜 추가
+        seletedOrder.deliveryCompleted_date = `${month}/${day}/${year} ${ampm} ${hours}:${minutes}`;
+        
       } 
       await this.orders.save(seletedOrder);
       
