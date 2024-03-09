@@ -22,7 +22,10 @@ export class DealService {
 
   async makeADeal(makingDealInput:MakeADealInputDTO): Promise<void> {
     try {
+    this.logger.log('makeADeal') //undefined
+    console.log("makingDealInput.sellerId", makingDealInput.sellerId)
     const sellMember = await this.members.findOne({where: {userId: makingDealInput.sellerId}})
+    console.log("sellMember",sellMember);
     const newRobot = this.robots.create({
       name:makingDealInput.name,
       price:makingDealInput.price,    
@@ -77,6 +80,9 @@ export class DealService {
         },
         relations:{
           robot:true
+        },
+        order:{
+          id:'DESC'
         }
       })
       return myDeals;
