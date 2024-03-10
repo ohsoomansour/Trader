@@ -176,6 +176,7 @@ import { Robot } from './deals/entitles/robot.entity';
 import { DownloadModule } from './download/download.module';
 import { OrderModule } from './orders/order.module';
 import { Store } from './orders/entities/store.entity';
+import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton.module';
 
 @Module({
   imports: [
@@ -222,7 +223,8 @@ import { Store } from './orders/entities/store.entity';
     UploadModule,
     DownloadModule,
     OrderModule,
-    DealModule
+    DealModule,
+    PhoneValidationModule
     /*#JwtModule등록 방법2.
     JwtModule.registerAsync({
       imports: [ConfigModule],
