@@ -55,9 +55,7 @@ async function bootstrap() {
   //app.useWebSocketAdapter(redisIoAdapter); //redis 소켓
   //app.useWebSocketAdapter(new WsAdapter(app)); //웹소켓 어댑터
   app.useWebSocketAdapter(new IoAdapter(app)); // socket.io 어댑터
-  app.enableCors({
-    origin: '*',
-  });
+  app.enableCors();
   //methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   //credentials: true, // 인증 정보 전달 허용
 
@@ -76,6 +74,12 @@ async function bootstrap() {
     }),
     json({ limit: '50mb' }),
     urlencoded({ limit: '50mb', extended: true }),
+    (req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+      //res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
+      next();
+    },
   );
   //app.use(JwtMiddleware);
 
