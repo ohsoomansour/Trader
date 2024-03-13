@@ -55,7 +55,11 @@ async function bootstrap() {
   //app.useWebSocketAdapter(redisIoAdapter); //redis 소켓
   //app.useWebSocketAdapter(new WsAdapter(app)); //웹소켓 어댑터
   app.useWebSocketAdapter(new IoAdapter(app)); // socket.io 어댑터
-  app.enableCors(); //{ origin: '*', credentials: true }
+  app.enableCors({
+    origin: 'https://main--dancing-basbousa-3823f5.netlify.app', // 허용할 출처
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // 인증 정보 전달 허용
+  }); //{ origin: '*', credentials: true }
 
   app.use(
     session({
