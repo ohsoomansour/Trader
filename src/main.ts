@@ -44,7 +44,7 @@ import { urlencoded, json } from 'body-parser';
  */
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true }); //반환: NestApplication instance
+  const app = await NestFactory.create(AppModule); //반환: NestApplication instance
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: true, // 프로덕트 단계에서 세부 에러 비활성
@@ -56,7 +56,7 @@ async function bootstrap() {
   //app.useWebSocketAdapter(new WsAdapter(app)); //웹소켓 어댑터
   app.useWebSocketAdapter(new IoAdapter(app)); // socket.io 어댑터
   app.enableCors({
-    origin: 'https://main--dancing-basbousa-3823f5.netlify.app', // 허용할 출처
+    origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // 인증 정보 전달 허용
   }); //{ origin: '*', credentials: true }
