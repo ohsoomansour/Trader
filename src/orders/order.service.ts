@@ -304,9 +304,8 @@ export class OrderService {
         seletedOrder.status = OrderStatus.InDelivery;
       } else if(seletedOrder.status === OrderStatus.InDelivery){
         seletedOrder.status = OrderStatus.DeliveryCompleted
-        //주문 완료 날짜 추가
         seletedOrder.deliveryCompleted_date = `${month}/${day}/${year} ${ampm} ${hours}:${minutes}`;
-        
+        //⭐주문 완료 후 order 기록은 삭제하지 않고 남아있어야 과거 데이터를 확인할 수 있다. 
       } 
       await this.orders.save(seletedOrder);
       

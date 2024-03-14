@@ -17,6 +17,7 @@ import { Member } from './entites/member.entity';
 import { Role } from 'src/auth/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CupdateMemberInfoDTO } from './dtos/updateMember.dto';
+
 //import { LoginOutputDTO } from './dtos/login.dto';
 /*#SESSION  COOKIE란? 
  session({secret: 'SESSION_ID_SM' - "This is the secret used to sign the session cookie" })
@@ -67,39 +68,37 @@ export class MemberController {
    * @Explain : 클라인트에서 회원가입 POST REQUEST에 대한 처리
    */
   @Post('/join') //, @Res() res: Response
-  signUpForMembership(@Req() req: Request, @Res() res: Response) {
+  async signUpForMembership(@Req() req: Request, @Res() res: Response) {
     try {
-      console.log('join에 들어오나');
-      const BASE_PATH = 'http://localhost:3001';
+      this.logger.log('member/join:');
       this.memberService.signUpForMembership(req.body);
-      return res.redirect(`${BASE_PATH}/login`);
+      //프론트에서 redirect 여부만 확인, history로 이동 따라서 배포 서버에서는 정상적으로 이동
+      return res.redirect('http://localhost:3001/login');
     } catch {
       console.error();
+      this.logger.error('고객님은 회원가입을 할 수 없습니다. ');
+      this.logger.debug('1.비즈니스 로직에서 { ok: false } 확인하세요.');
+      this.logger.debug('2.아이디와 비밀번호를 확인하세요.');
     }
   }
 
   /*
-   * @Author : OSOOMAN
-   * @Date : 2023.12.23
-   * @Function : 로그인 후 세션 설정 및 계정 활동 트래킹
-   * @Parm : Request의 JSON BODY
-   * @Return : 회원의 홈으로 이동 또는 에러
-   * @Explain : 로그인 후 '세션 만료 시간 60초'를 확인하고 '계정 활동 상태를 트래킹하는 기능'을 추가한다.
-      - 사용법: 
-      REST API Tool(Insomnia등)을 통한 예시: 
-      JSON  { "userId" : "osoomansour9@naver.com", "password" : "osoomansour9"  }
-   */
+  * @Author : OSOOMAN
+  * @Date : 2023.12.23
+  * @Function : 로그인 후 세션 설정 및 계정 활동 트래킹
+  * @Parm : Request의 JSON BODY
+  * @Return : 회원의 홈으로 이동 또는 에러
+  * @Explain : 로그인 후 '세션 만료 시간 60초'를 확인하고 '계정 활동 상태를 트래킹하는 기능'을 추가한다.
+    - 사용법: 
+    REST API Tool(Insomnia등)을 통한 예시: 
+    JSON  { "userId" : "osoomansour9@naver.com", "password" : "osoomansour9"  }
+  */
 
   //로그인 버튼을 누르면 홈으로 이동
   @Post('/login')
   @Role(['any'])
   @UseGuards(AuthGuard)
-  async logIn(
-    //#주의 사항: @Body 또는 아래 @Req req 둘 중 하나만 써야된다
-    //@Body() loginInfo,
-    @Req() req: Request,
-    @Res() res: Response,
-  ): Promise<void> {
+  async logIn(@Req() req: Request, @Res() res: Response): Promise<void> {
     try {
       const result = await this.memberService.login(req.body);
 
@@ -118,10 +117,7 @@ export class MemberController {
         console.log(session);
         //#로그인 후 활동 추적
         await this.memberService.trackUserActivity(req.body.userId);
-        //res.status(200).json(result);
-        //res.status(200).send(result);
-        //res.status(HttpStatus.OK).send(result);
-        res.set('Access-Control-Allow-Credentials', 'true');
+
         res.status(HttpStatus.OK).send(result);
       }
     } catch (e) {

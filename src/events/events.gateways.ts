@@ -16,8 +16,7 @@ import { ChatUserDto } from 'src/chat/dtos/chat-user.dto';
 import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
-//💊해결 한 방: git config --global core.autocrlf true
-//  git commit -am     -> git push heroku main 
+
 const PORT = process.env.NODE_ENV ==="dev" ? 8080 : undefined;
 @WebSocketGateway(PORT, 
 {
@@ -158,6 +157,9 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         this.roomUsers[userInfo.roomId] = [];  //방의 아이디 값이 없으면 초기화 
       }
       
+      //userInfo.roomId 
+      
+      
       if(this.roomUsers[userInfo.roomId].includes(userInfo.userName)) {
         //참여 기록 삭제 후 다시 재 참여 
          this.roomUsers[userInfo.roomId] = this.roomUsers[userInfo.roomId].filter(user => user !== userInfo.userName);
@@ -170,7 +172,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         this.server.emit('userJoined', {
           userList: this.roomUsers[userInfo.roomId]
         })
-      }
+      } 
+      
     
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
       function formatCurrentTime(): string {
@@ -205,6 +208,12 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.logger.log('chat exit');
     console.log(userInfo);
     try {
+      const now = new Date();
+      const month = now.getMonth();
+      const day = now.getDate()
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
       //1. exit 소켓 제거 
       this.chattingRoomToSockets[userInfo.roomId] = this.chattingRoomToSockets[userInfo.roomId].filter((joinedSocket) => joinedSocket !== mySocket)
       //2. 방에서 유저 삭제!
@@ -212,7 +221,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       this.roomUsers[userInfo.roomId] = this.roomUsers[userInfo.roomId].filter((joinedUser) => joinedUser !== userInfo.userId)
       if(!this.roomUsers[userInfo.roomId].includes(userInfo.userId)) {
         this.chattingRoomToSockets[userInfo.roomId].forEach((s:Socket) => {
-          s.emit("exit", { userList: this.roomUsers[userInfo.roomId], userId: userInfo.userId});
+          s.emit("exit", { userList: this.roomUsers[userInfo.roomId], userId: userInfo.userId, time: `${month+1}월 ${day}일 ${hours}:${minutes}:${seconds}`});
         })
       } else {
         return;
@@ -291,7 +300,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       this.conferenceRoomToSockets[roomId].forEach((s) => {
         s.emit('start_call');
       });
-    }  
+    } 
     
   }
   @SubscribeMessage('webrtc_offer')
