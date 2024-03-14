@@ -30,6 +30,9 @@ export class Order extends CoreEntity {
     member => member.orders
   )
   customer: Member;
+  
+  @Column()  
+  address: string;
 
   @ManyToOne(
     () => Member,
@@ -39,10 +42,6 @@ export class Order extends CoreEntity {
 
   @Column({nullable:true})
   salesManager_mobile_phone:string;
-
-    
-  @Column()  
-  address: string;
 
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending})
   status: OrderStatus;

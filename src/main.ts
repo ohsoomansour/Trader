@@ -55,6 +55,7 @@ async function bootstrap() {
   //app.useWebSocketAdapter(redisIoAdapter); //redis 소켓
   //app.useWebSocketAdapter(new WsAdapter(app)); //웹소켓 어댑터
   app.useWebSocketAdapter(new IoAdapter(app)); // socket.io 어댑터
+
   app.enableCors();
   //methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   //credentials: true, // 인증 정보 전달 허용

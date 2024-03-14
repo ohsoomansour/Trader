@@ -159,7 +159,12 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       }
       
       if(this.roomUsers[userInfo.roomId].includes(userInfo.userName)) {
-        return;
+        //참여 기록 삭제 후 다시 재 참여 
+         this.roomUsers[userInfo.roomId] = this.roomUsers[userInfo.roomId].filter(user => user !== userInfo.userName);
+         this.roomUsers[userInfo.roomId].push(userInfo.userName);
+         this.server.emit('userJoined', {
+          userList: this.roomUsers[userInfo.roomId]
+         })
       } else {
         this.roomUsers[userInfo.roomId].push(userInfo.userName);
         this.server.emit('userJoined', {
