@@ -50,6 +50,7 @@
     "google-libphonenumber": "^3.2.34",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.45",
     "mysql2": "^3.6.5",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",

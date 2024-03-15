@@ -16,6 +16,7 @@ import { ChatUserDto } from 'src/chat/dtos/chat-user.dto';
 import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
+import moment from "moment-timezone";
 
 const PORT = process.env.NODE_ENV ==="dev" ? 8080 : undefined;
 @WebSocketGateway(PORT, 
@@ -177,14 +178,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
       function formatCurrentTime(): string {
-        const now = new Date();
-        const months = now.getMonth() + 1;
-        const date = now.getDate();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const seconds = now.getSeconds();
-        
-        return `${months}월 ${date}일 ${hours}:${minutes}:${seconds}`;
+        const m = moment().tz("Asia/Seoul");
+        return m.format("YYYY-MM-DD HH:mm:ss");
       }
       const currentTime = formatCurrentTime();
       if (!this.chattingRoomToSockets[userInfo.roomId]) {
@@ -210,12 +205,11 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.logger.log('chat exit');
     console.log(userInfo);
     try {
-      const now = new Date();
-      const month = now.getMonth();
-      const day = now.getDate()
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
+      function formatCurrentTime(): string {
+        const m = moment().tz("Asia/Seoul");
+        return m.format("YYYY-MM-DD HH:mm:ss");
+      }
+      const currentTime = formatCurrentTime();
       //1. exit 소켓 제거 
       this.chattingRoomToSockets[userInfo.roomId] = this.chattingRoomToSockets[userInfo.roomId].filter((joinedSocket) => joinedSocket !== mySocket)
       //2. 방에서 유저 삭제!
@@ -223,7 +217,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       this.roomUsers[userInfo.roomId] = this.roomUsers[userInfo.roomId].filter((joinedUser) => joinedUser !== userInfo.userId)
       if(!this.roomUsers[userInfo.roomId].includes(userInfo.userId)) {
         this.chattingRoomToSockets[userInfo.roomId].forEach((s:Socket) => {
-          s.emit("exit", { userList: this.roomUsers[userInfo.roomId], userId: userInfo.userId, time: `${month+1}월 ${day}일 ${hours}:${minutes}:${seconds}`});
+          s.emit("exit", { userList: this.roomUsers[userInfo.roomId], userId: userInfo.userId, time: `${currentTime}`});
         })
       } else {
         return;
