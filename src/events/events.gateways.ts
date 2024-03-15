@@ -178,9 +178,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       
     
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
-      // 예비: `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
-      function Time () {
-        /*
+      // 예비: 
+      function Time ():string {
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
@@ -188,11 +187,11 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         const Hours = now.getHours();
         const minutes = now.getMinutes();
         const seconds = now.getSeconds();
-        */
-        return new Date();
+
+        return `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
       }
       const currentTime = Time();
-      console.log("serverTime", currentTime)
+
       if (!this.chattingRoomToSockets[userInfo.roomId]) {
         this.chattingRoomToSockets[userInfo.roomId] = [];  //초기화 
       }
@@ -217,18 +216,20 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     console.log(userInfo);
     try {
       function Time () {
+        
+        /**/
         const now = new Date();
-        /*
         const year = now.getFullYear();
         const month = now.getMonth();
         const date = now.getDate();
         const Hours = now.getHours();
         const minutes = now.getMinutes();
         const seconds = now.getSeconds();
-        */
-        return now;
+        
+        return `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
       }
       const currentTime = Time();
+     
       
       //1. exit 소켓 제거 
       this.chattingRoomToSockets[userInfo.roomId] = this.chattingRoomToSockets[userInfo.roomId].filter((joinedSocket) => joinedSocket !== mySocket)
