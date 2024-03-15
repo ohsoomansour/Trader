@@ -16,7 +16,8 @@ import { ChatUserDto } from 'src/chat/dtos/chat-user.dto';
 import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
-import moment from "moment-timezone";
+import 'moment-timezone';
+
 
 const PORT = process.env.NODE_ENV ==="dev" ? 8080 : undefined;
 @WebSocketGateway(PORT, 
@@ -177,11 +178,20 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       
     
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
-      function formatCurrentTime(): string {
-        const m = moment().tz("Asia/Seoul");
-        return m.format("YYYY-MM-DD HH:mm:ss");
+      // 클라이언트의 시간대 정보
+      //const serverTime = moment.tz.setDefault('YYYY-MM-DD HH:mm:ss');
+      function Time () {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const date = now.getDate();
+        const Hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        return `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
       }
-      const currentTime = formatCurrentTime();
+      const currentTime = Time();
+      console.log("serverTime", currentTime)
       if (!this.chattingRoomToSockets[userInfo.roomId]) {
         this.chattingRoomToSockets[userInfo.roomId] = [];  //초기화 
       }
@@ -205,11 +215,18 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.logger.log('chat exit');
     console.log(userInfo);
     try {
-      function formatCurrentTime(): string {
-        const m = moment().tz("Asia/Seoul");
-        return m.format("YYYY-MM-DD HH:mm:ss");
+      function Time () {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const date = now.getDate();
+        const Hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        return `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
       }
-      const currentTime = formatCurrentTime();
+      const currentTime = Time();
+      
       //1. exit 소켓 제거 
       this.chattingRoomToSockets[userInfo.roomId] = this.chattingRoomToSockets[userInfo.roomId].filter((joinedSocket) => joinedSocket !== mySocket)
       //2. 방에서 유저 삭제!
