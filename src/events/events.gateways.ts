@@ -178,11 +178,13 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
       function formatCurrentTime(): string {
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-      
-        return `${hours}:${minutes}:${seconds}`;
+        const months = now.getMonth() + 1;
+        const date = now.getDate();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        
+        return `${months}월 ${date}일 ${hours}:${minutes}:${seconds}`;
       }
       const currentTime = formatCurrentTime();
       if (!this.chattingRoomToSockets[userInfo.roomId]) {
