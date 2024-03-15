@@ -192,7 +192,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       this.chattingRoomToSockets[userInfo.roomId].push(client)
       if(this.chattingRoomToSockets[userInfo.roomId]){
         this.chattingRoomToSockets[userInfo.roomId].forEach((s:Socket) => {
-          s.emit('participants', {participant: [`${userInfo.userName} 님이 참가하였습니다. ${currentTime}` ]});
+          s.emit('participants', {participant:`${userInfo.userName} 님이 참가하였습니다.`, time: `${currentTime}` } );
           
         })
       }
