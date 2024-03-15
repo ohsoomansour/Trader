@@ -178,9 +178,9 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       
     
       //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
-      // 클라이언트의 시간대 정보
-      //const serverTime = moment.tz.setDefault('YYYY-MM-DD HH:mm:ss');
+      // 예비: `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
       function Time () {
+        /*
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
@@ -188,7 +188,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         const Hours = now.getHours();
         const minutes = now.getMinutes();
         const seconds = now.getSeconds();
-        return `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
+        */
+        return new Date();
       }
       const currentTime = Time();
       console.log("serverTime", currentTime)
@@ -217,13 +218,15 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     try {
       function Time () {
         const now = new Date();
+        /*
         const year = now.getFullYear();
         const month = now.getMonth();
         const date = now.getDate();
         const Hours = now.getHours();
         const minutes = now.getMinutes();
         const seconds = now.getSeconds();
-        return `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
+        */
+        return now;
       }
       const currentTime = Time();
       
