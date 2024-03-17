@@ -272,10 +272,10 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     //룸의 user의 소켓에만 보낸다!
     function formatCurrentTime(): string {
       const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
+      const hours = now.getHours();
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
-      return `${hours}:${minutes}:${seconds}`; // 01:01:11 형태 반환 
+      return `${hours+9}:${minutes}:${seconds}`; // 01:01:11 형태 반환 
     }
     const currentTime = formatCurrentTime();
     try {

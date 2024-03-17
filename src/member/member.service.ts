@@ -49,9 +49,9 @@
     npm i -D @types/express-session
     @All 데코레이터 의미: 
 */
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {  Repository } from 'typeorm';
 import { Member } from './entites/member.entity';
 import { CreateMemberInputDTO, CreateMemberOutputDTO } from './dtos/regMember.dto';
 import { LoginInputDTO, MemberRole } from './dtos/login.dto';
@@ -68,7 +68,9 @@ export class MemberService {
     @InjectRepository(Verification)
     private readonly verification: Repository<Verification>,
     private readonly jwtService: JwtService,
+    
   ) {}
+  private readonly logger  = new Logger();
   /*
    * @Author : OSOOMAN
    * @Date : 2023.12.21
@@ -134,10 +136,10 @@ export class MemberService {
       */
       const member = await this.members.findOne({
         where: { userId:userId },
-        select: ['userId', 'password'], //password를 가져오라고 명시화
+        select: ['userId', 'password'], //password를 가져오라고 명시
       });
-      console.log('logIn:')
-      console.log(member);
+      this.logger.log('logIn');
+      console.log(member);   //$2b$10$yLp0ErXwJGbBYdfAe8rFNeSd/fYFHrq/CR9naLMXkuxHr.CKv4I/y
       if (!member) {
         return {
           ok: false,
@@ -188,8 +190,7 @@ export class MemberService {
         where: { userId: userId },
         cache: true,
       });
-      console.log('findById_user:');
-      console.log(user);
+
       return {
         ok: true,
         member: user,
@@ -204,20 +205,10 @@ export class MemberService {
   ): Promise<CupdateMemberOutputDTO> {
     try {
       const user = await this.members.findOne({
-        where: { id: id },
-        cache: true,
+        where: { id },
+        
       });
-      console.log('editProfile의 user:')
-      console.log(user);
-      /* 변경 전 
-      if (user) {
-        user.userId = userId;
-        user.password = password;
-        user.address = address;
-        await this.members.save(user);
-        return user;
-      }*/
-      /*변경 후*/
+      
       if (userId) {
         user.userId = userId;
         user.verified = false;
@@ -229,8 +220,23 @@ export class MemberService {
           this.verification.create({ member: user }),
         );
       }
+      this.logger.log('editProfile user의 패스워드')
+      console.log(user.password);
+      
       if(password){
+        const member = await this.members.findOne({
+          where: { userId:userId },
+          select: ['userId', 'password'], //password를 가져오라고 명시
+        });
+        const isSamePw = await member.checkingPw(password);
+        if(isSamePw){
+          return {
+            ok:false,
+            error: '기존 패스워드와 같습니다!'
+          }
+        }
         user.password = password;
+
       }
       if(address){
         user.address = address;
