@@ -17,6 +17,7 @@ import { Member } from './entites/member.entity';
 import { Role } from 'src/auth/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CupdateMemberInfoDTO } from './dtos/updateMember.dto';
+import { CreateMemberOutputDTO } from './dtos/regMember.dto';
 
 //import { LoginOutputDTO } from './dtos/login.dto';
 /*#SESSION  COOKIE란? 
@@ -68,12 +69,13 @@ export class MemberController {
    * @Explain : 클라인트에서 회원가입 POST REQUEST에 대한 처리
    */
   @Post('/join') //, @Res() res: Response
-  async signUpForMembership(@Req() req: Request, @Res() res: Response) {
+  async signUpForMembership(
+    @Req() req: Request,
+  ): Promise<CreateMemberOutputDTO> {
     try {
       this.logger.log('member/join:');
-      this.memberService.signUpForMembership(req.body);
       //프론트에서 redirect 여부만 확인, history로 이동 따라서 배포 서버에서는 정상적으로 이동
-      return res.redirect('http://localhost:3001/login');
+      return this.memberService.signUpForMembership(req.body);
     } catch {
       console.error();
       this.logger.error('고객님은 회원가입을 할 수 없습니다. ');

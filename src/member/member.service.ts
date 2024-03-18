@@ -91,7 +91,7 @@ export class MemberService {
       //이 아이디가 존재 하는 지 검사 필요
       const idExist = await this.members.findOne({ where: { userId } });
       if (idExist) {
-        return { ok: false, error: 'ID already exists' };
+        return { ok: false, error: 'The ID already exists' };
       }
 
       const user = await this.members.save(
@@ -139,7 +139,7 @@ export class MemberService {
         select: ['userId', 'password'], //password를 가져오라고 명시
       });
       this.logger.log('logIn');
-      console.log(member);   //$2b$10$yLp0ErXwJGbBYdfAe8rFNeSd/fYFHrq/CR9naLMXkuxHr.CKv4I/y
+
       if (!member) {
         return {
           ok: false,
@@ -262,8 +262,16 @@ export class MemberService {
   async trackUserActivity(userId: string): Promise<void> {
     // 사용자의 활동을 추적하고 필요에 따라 휴면 상태로 설정
     const user = await this.members.findOne({ where: { userId: userId } });
+    const now  = new Date();
+    const years = now.getFullYear();
+    const month = now.getMonth();
+    const day = now.getDate();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const secs = now.getSeconds();
     if (user) {
-      user.lastActivityAt = new Date();
+      
+      user.lastActivityAt = `${years}년 ${month+1}월 ${day}일 ${hours+9}:${minutes}${secs}`;
       await this.members.save(user);
     }
   }

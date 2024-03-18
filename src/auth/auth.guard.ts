@@ -34,8 +34,7 @@ export class AuthGuard implements CanActivate {
       if(roles.includes(MemberRole.any)){
         return true;
       }
-      console.log('auth.guard.ts의 memberRole확인:') 
-      console.log(request.member.memberRole)
+
       const mr: MemberRole | undefined = request.member.memberRole!
       if(roles.includes(mr)){
         return true;

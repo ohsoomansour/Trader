@@ -111,7 +111,7 @@ export class Member extends CoreEntity {
   memberRole: string;
 
   @Column({nullable : true})
-  lastActivityAt:Date;
+  lastActivityAt:string;
 
   @Column({nullable : true})
   isDormant:boolean;
@@ -168,7 +168,7 @@ export class Member extends CoreEntity {
     }
   }
 
-  async checkingPw(reqPassword : string) : Promise<boolean> {
+  async checkingPw(reqPassword: string) : Promise<boolean> {
     try {
       console.log(`로그인 입력 패스워드:${reqPassword}`);
       console.log(`로그인 시 DB 패스워드:${this.password}`)
@@ -181,7 +181,4 @@ export class Member extends CoreEntity {
       throw new InternalServerErrorException('The password is wrong!');
     }
   } 
-
-
-
 }
