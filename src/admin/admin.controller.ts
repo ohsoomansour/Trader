@@ -6,18 +6,15 @@ import {
   Param,
   Patch,
   Query,
-  Redirect,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { AdminService } from './admin.service';
 import { MyParamPipe } from './validation/admin-memberParam.pipe';
 import { Role } from 'src/auth/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AupdateMemberInfoDTO } from 'src/member/dtos/updateMember.dto';
-//import { Role } from 'src/auth/role.decorator';
 /* ******************************* 🚨route 주의사항 ********************************* 
   if)요청: http://localhost:3000/admin/search?test 의 경우
   @Get(':id')
@@ -57,13 +54,8 @@ export class AdminController {
   @Get('/members')
   @Role(['admin'])
   @UseGuards(AuthGuard)
-  async getMembers(@Req() req: Request, @Res() res: Response) {
+  async getMembers(@Res() res: Response) {
     //#AuthGuard로 확인하는 방법
-    const session: any = req.session;
-    console.log('admin/members에서 session확인:');
-    console.log(session);
-    //#세션의 memberRole이 undefined이거나 null이면 바로 에러가 발생
-
     const members = await this.adminService.getAllmembers();
     return res.status(200).send(members);
   }
@@ -72,10 +64,10 @@ export class AdminController {
    * @Author : OSOOMAN
    * @Date : 2024.1.5
    * @Function : 회원 1명을 검색하는 함수
-   * @Parm : '고객의 이름'을 검색 또는 유저의 아이디 검색 
+   * @Parm : '고객의 이름'을 검색
    * @Return : 검색 되기를 원하는 회원을 반환
    * @Explain : 
-     - 사용법: Headers에 key=x-jwt value= jwt 값 입력 후 JSON바디에 아이디/비밀번호 
+     - 간단한 사용법: Headers에 key=x-jwt value= jwt 값 입력 후 JSON바디에 아이디/비밀번호 
      - REST API Tool(Insomnia등)을 통한 예시: 
         Headers: 'x-jwt'='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im9zb29tYW5zb3VyOUBuYXZlci5jb20iLCJpYXQiOjE3MDQ3Njg0NzF9.eRXT_JGpNYOV420LkPqBfcAHzvu9qbdaAetj3Flx4MI'
         Query: name = MarkZuckerberg
@@ -125,41 +117,5 @@ export class AdminController {
   async inactivateAccount() {
     await this.adminService.setUsersToDormant();
     this.logger.log('비활성화 하였습니다.');
-  }
-
-  /*
-   * @Author : OSOOMAN
-   * @Date : 2023.12.24
-   * @Function : redirect
-   * @Parm : 없음
-   * @Return : redirection
-   * @Explain : 아래 세션의 예시를 확인을 통해 회원의 역할이 관리자가 아니면 전체 회원이 사용하는 home으로 이동
-   * Session {
-      cookie: {
-        path: '/',
-        _expires: 2024-01-09T13:22:16.009Z,
-        originalMaxAge: 60000,
-        httpOnly: true
-      },
-      user: 'osoomansour9@naver.com',
-      memberRole: { memberRole: 'admin' }
-    }
-   */
-  @Role(['admin'])
-  @UseGuards(AuthGuard)
-  @Get('/home')
-  @Redirect('http://localhost:3000/admin/home')
-  redirectToGetMemberList(@Req() req: Request, @Res() res: Response) {
-    const session: any = req.session;
-    if (session.memberRole.memberRole === undefined) {
-      return res.redirect('http://localhost:3000/member/home');
-    }
-  }
-
-  @Role(['admin'])
-  @UseGuards(AuthGuard)
-  @Get('/home')
-  goHome() {
-    return 'Welcome to Admin Home';
   }
 }

@@ -99,8 +99,10 @@
    - orgin:원격저장소 별칭 d
    - master: 현재브랜치 이름 
    - 🚀'로컬 저장소'에서 파일을 업로드하면서🚀 병합시키는 명령어가 push🚩 
+   git remote remove origin (기존 원격 저장소 삭제)
+   git remote init () "Reinitialized existing Git repository in C:/Users/내컴퓨터/Desktop/Nest_JS/Dev_Backend/.git/" 
 
-  
+
   ★수정발생: 
     git add . (전체하는게 편함 )
     git commit -m "second commit" 
@@ -146,7 +148,12 @@
     > 💊해결 한 방: git config --global core.autocrlf true
     git commit -am "make it better"
     git push heroku main(master)
-          
+  
+    [🌟잔디가 심겨지는 경우🌟]
+1. github 이메일 계정과 로컬의 이메일 정보가 같아야 함.
+2. branch는 main 혹은 gh-pages 둘 중 하나여야 함.
+ - In the repository's default branch
+ - In the gh-pages branch (for repositories with project sites)
   🔹Git Bash: window의 cmd, linux와 mac의 terminal과 같은 역할   
 */
 
@@ -173,7 +180,6 @@ import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
 import { DealModule } from './deals/deal.module';
 import { Robot } from './deals/entitles/robot.entity';
-import { DownloadModule } from './download/download.module';
 import { OrderModule } from './orders/order.module';
 import { Store } from './orders/entities/store.entity';
 import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton.module';
@@ -183,7 +189,7 @@ import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
-      //joi는 변수의 schema, type 등을 런타임에서 체킹하도록 도와주는 패키지이
+      //joi는 변수의 schema, type 등을 런타임에서 체킹하도록 도와주는 패키지
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
         .valid('dev','production', 'test' )
@@ -206,7 +212,7 @@ import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton
             host: process.env.DB_HOST,
             port: +process.env.DB_PORT,
             username: process.env.DB_USERNAME,
-            password: process.env.DB_PASSWORD,         //postgresql은 비번을 묻지 않음
+            password: process.env.DB_PASSWORD, //postgresql은 비번을 묻지 않음
             database: process.env.DB_NAME,
           }),
       synchronize: true,
@@ -221,7 +227,6 @@ import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton
       privateKey: process.env.JWT_SECRET,
     }),
     UploadModule,
-    DownloadModule,
     OrderModule,
     DealModule,
     PhoneValidationModule
@@ -271,36 +276,17 @@ import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton
   providers: [
     {
       provide: APP_PIPE,
-      useClass: ValidationPipe,
-      /*
-      useValue: new ValidationPipe({
-        disableErrorMessages: true,
-      }),*/
+      useClass: ValidationPipe, //NestJS의 기본적으로 제공되는 내장된 ValidationPipe   
     },
 
-  ], //기본적으로 제공되는 ValidationPipe
+  ], 
 })
 
-/* NestJS는 "Express와 같은 원리" 
-  #MiddlewareConsumer  
-   @param {...(Type | Function)} middleware middleware class/function or array of classes/functions
-
-
-   export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: '*',  
-      method: RequestMethod.ALL,
-    });
-  }
-}
-   
-
-*/
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    //JwtMiddleware를 적용하여 모든 경로에 대한 모든 HTTP 요청에 미들웨어를 적용
     consumer.apply(JwtMiddleware).forRoutes(
     {path: '*', method: RequestMethod.ALL });
-    //이를 통해 WebSocket 연결의 HTTP 핸드셰이크 요청을 허용할 수 있습니다.
+
   }
 }

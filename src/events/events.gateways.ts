@@ -16,8 +16,6 @@ import { ChatUserDto } from 'src/chat/dtos/chat-user.dto';
 import { ProfanityFilterPipe } from 'src/chat/profanity-filter.pipe';
 import { ChatValidation } from 'src/chat/validation/chatUser.validation';
 import { Server} from 'ws';
-import 'moment-timezone';
-
 
 const PORT = process.env.NODE_ENV ==="dev" ? 8080 : undefined;
 @WebSocketGateway(PORT, 
@@ -58,38 +56,70 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     this.logger.log(`A socket with id:${client.id} is disconnected From the server.  `)
     this.connectedClients.delete(client.id);
   } 
+  /*
+   * @Author : OSOOMAN
+   * @Date : 24.3.18
+   * @Function : join_room 이벤트가 발생하면 함수가 실행된다. 
+   * @Parm: 방 이름, (연결된) 소켓
+   * @Return:  -
+   * @Explain: 상대방(peer)가 참가했다고 타겟 방에 참여되어 있는 사용자들에게 브로드캐스팅한다. 
+   */
   @SubscribeMessage('join_room')
   rtc_joinRoom(@MessageBody() roomId, @ConnectedSocket() socket: Socket){
-    //private conferenceRoomToSockets: { [roomId: string]: Socket[] } = {};
-    console.log(roomId);
     this.logger.log('join_room');  
     socket.join(roomId);
     socket.to(roomId).emit("welcome", "new Peer Join!")
   }
-
+  /*
+   * @Author : OSOOMAN
+   * @Date : 24.3.18
+   * @Function :peer가 offer를 생성하고 offer를  이벤트가 발생하면 함수가 실행된다. 
+   * @Parm: RTCSessionDescriptionInit의 offer와 room 이름과 (연결된)소켓
+   * @Return: -
+   * @Explain: 피어 간 통신을 설정하는 데 필요한 정보가 포함되어있는 'PeerConnection 객체의 로컬 설명' 생성을 받는다. (SDP 형식) 
+               그리고 상대 피어에게 offer를 전달한다. 
+   */
   @SubscribeMessage('offer')
   rtc_receiveOffer(@MessageBody() offerInfo, @ConnectedSocket() socket: Socket) {
     this.logger.log('offer');
     socket.to(offerInfo[1]).emit("offer", offerInfo[0]);
-
   }
+  /*
+   * @Author : OSOOMAN
+   * @Date : 24.3.18
+   * @Function : 상대 피어가 'answer'이벤트를 발생시키면 실행되는 함수이다. 
+   * @Parm: answerInfo 객체에는 SDP 형식의 answer 변수, 방이름 그리고 (연결된)소켓
+   * @Return: -
+   * @Explain: 상대(원격) 피어가 'offer'를 받고 설정 후 응답을 생성해 보내서 받는 함수이다. 
+   */
   @SubscribeMessage('answer')
   rtc_receiveAnswer(@MessageBody() answerInfo, @ConnectedSocket() socket: Socket) {
     this.logger.log('answer');
     socket.to(answerInfo[1]).emit("answer", answerInfo[0])
-  
   }
+  /*
+   * @Author : OSOOMAN
+   * @Date : 24.3.18
+   * @Function : icecandidate 이벤트가 발생했을 때(offer를 보낸 피어가 answer를 받을 때) 함수가 동작한다. 
+                 이 candidate를 다시 상대 피어(브라우저)에게 보내야한다. 
+   * @Parm: ICEinfo는 candidate (2780721361 1  tcp... 이런 형태)와 소켓
+   * @Return: -
+   * @Explain: ICE candidate란? SDP가 외부 NAT(ip주소와 port 제한 처리 방법)을 인식하기 위한 기술
+   * - 
+   */
   @SubscribeMessage("ice")
   rtc_receiveICEcandidate(@MessageBody() ICEinfo, @ConnectedSocket() socket: Socket) {
     socket.to(ICEinfo[1]).emit("ice", ICEinfo[0]);
-
   }
-  @SubscribeMessage("chat")
-  rtc_chat(@MessageBody() ICEinfo, @ConnectedSocket() socket: Socket) {
-    socket.to(ICEinfo[1]).emit("ice", ICEinfo[0]);
-
-  }
-  //===========================  ============================================================
+  
+  /*
+   * @Author : OSOOMAN
+   * @Date : 24.3.18
+   * @Function : 사용자가 채팅방을 참가한다. 
+   * @Parm: roomId와 연결된 소켓 
+   * @Return: -
+   * @Explain: 사용자가 room의 이름을 입력하고 join 버튼을 누르면 join 이벤트가 실행되고 hanleEmit 함수가 실행된다. 
+   */
   @SubscribeMessage('join')
   handleEmit(@MessageBody() roomId: any, @ConnectedSocket() client: Socket) {
     this.logger.log('we are receiving a join event');
@@ -133,9 +163,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         this.logger.debug(`이 방의 정원은 5입니다. 다른 roomId에 참가 해주세요.`);
         console.error(e)
       }
-      
   } 
-  //=======================================================================================================
+
   /*
    * @Author : OSOOMAN
    * @Date : 24.1.5
@@ -144,10 +173,8 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
    * @Return : -
    * @Explain : 방에 참여한 유저들의 유효성 확인, 그 다음 방에 아이디에 따라 사용자의 이름을 배정 후 참가자들의 리스트를 채팅방에 알림  
       - UI에서 사용법: 첫 번째, roomId를 제출하고 두 번째는 닉네임을 적고 참가 버튼을 누른다.  
-      
    */
-  //private roomUsers : { [roomId: string]: string[] } = {};  "예시로 room1: osm님, 전지현님 ... "
-  //private streamingroomToSockets: { [roomId: string]: Socket[] } = {}; "예시로 room1: 소켓1, 소켓2,..."
+
   @SubscribeMessage('joinRoom') 
   async joinRoom(@ConnectedSocket() client: Socket, @Body() userInfo: ChatUserDto): Promise<void> { 
     try {
@@ -158,10 +185,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       if (!this.roomUsers[userInfo.roomId]) {
         this.roomUsers[userInfo.roomId] = [];  //방의 아이디 값이 없으면 초기화 
       }
-      
-      //userInfo.roomId 
-      
-      
+  
       if(this.roomUsers[userInfo.roomId].includes(userInfo.userName)) {
         //참여 기록 삭제 후 다시 재 참여 
          this.roomUsers[userInfo.roomId] = this.roomUsers[userInfo.roomId].filter(user => user !== userInfo.userName);
@@ -175,10 +199,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
           userList: this.roomUsers[userInfo.roomId]
         })
       } 
-      
     
-      //#2. 같은 room에 있는 소켓들에 한 명의 참여자의 알림기능의 메세지를 보내는 기능 
-      // 예비: 
       function Time ():string {
         const now = new Date();
         const year = now.getFullYear();
@@ -210,14 +231,20 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
     } 
   
   }
+  /*
+   * @Author : OSOOMAN
+   * @Date : 24.3.18
+   * @Function : 사용자가 채티방을 나간다. 
+   * @Parm : 연결된 소켓과 유저의 정보(방 이름과 아이디 )
+   * @Return : -
+   */
+
   @SubscribeMessage('exit')
   exitChatRoom(@ConnectedSocket() mySocket: Socket, @MessageBody() userInfo){
     this.logger.log('chat exit');
     console.log(userInfo);
     try {
       function Time () {
-        
-        /**/
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
@@ -225,16 +252,13 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         const Hours = now.getHours();
         const minutes = now.getMinutes();
         const seconds = now.getSeconds();
-        
         return `${year}년 ${month+1}월 ${date}일 ${Hours+9}시 ${minutes}분 ${seconds }초 `;
       }
       const currentTime = Time();
-     
-      
+    
       //1. exit 소켓 제거 
       this.chattingRoomToSockets[userInfo.roomId] = this.chattingRoomToSockets[userInfo.roomId].filter((joinedSocket) => joinedSocket !== mySocket)
       //2. 방에서 유저 삭제!
-      
       this.roomUsers[userInfo.roomId] = this.roomUsers[userInfo.roomId].filter((joinedUser) => joinedUser !== userInfo.userId)
       if(!this.roomUsers[userInfo.roomId].includes(userInfo.userId)) {
         this.chattingRoomToSockets[userInfo.roomId].forEach((s:Socket) => {
@@ -248,9 +272,7 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       this.logger.error('')
       console.error(e);
     }
-
   }
-
 
   /*
    * @Author : OSOOMAN
@@ -263,12 +285,12 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
              *주의: 사진은 AWS S3의 (goodgang3)bucket에 저장되고 사진을 전송하고 컨트롤러에서 fetch의 결과가 약 20초 소요됩니다. 
     */
   @SubscribeMessage('message') 
-  async handleEvent(@MessageBody() messages): Promise<void> {
+  async messageFunction(@MessageBody() messages): Promise<void> {
     this.logger.log(`We are receiving a Message: ${messages[0]}`)
     this.logger.log(`We are receiving a Image or Video: ${messages[1]}`)
     this.logger.log(`We are receiving a chattingRoomId: ${messages[2]}`)
     this.logger.log(`We are receiving a isMe: ${messages[3]}`);
-    console.log(messages)
+
     //룸의 user의 소켓에만 보낸다!
     function formatCurrentTime(): string {
       const now = new Date();
@@ -293,89 +315,14 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
         }
       }
       const msgObj: object = { msg: filteredMessage, url: messages[1], time: `${currentTime}`, myEmaiId: messages[3] };
-      
-      /* client.emit('message', msgObj );  messages: [ 'osoomansour41@naver.com:  goods', '', 'testtyo' ]   */
       this.chattingRoomToSockets[messages[2]].forEach((s:Socket) => {
         s.emit('message', msgObj);
-        
       })
-      
     } catch (e) {
       this.logger.error(`messages의 자료 타입을 확인하세요.`);
+      this.logger.debug('사용자의 아이디가 ');
       console.error(e);
     }
   }
   
-  /*# 같은 room에 있는 모든 소켓들에 보내는 
-    These events are emitted to all the sockets conneted to the same room except the sender.
-  */
-  @SubscribeMessage('start_call')
-  startToCall(@MessageBody() roomId) {
-    this.logger.log(`Broadcasting start_call event to peers in room ${roomId}`);
-    //지정된 roomId를 가진 수신자에게만 보냄: roomId 가 어디서? 
-    if (this.conferenceRoomToSockets[roomId]) {
-      this.conferenceRoomToSockets[roomId].forEach((s) => {
-        s.emit('start_call');
-      });
-    } 
-    
-  }
-  @SubscribeMessage('webrtc_offer')
-  async receiveWebRTCOffer(@MessageBody() webrtc_offer) {
-    this.logger.log(`Broadcasting webrtc_offer event to peers in room ${webrtc_offer.roomId}`)
-
-    try {
-      
-      if (this.conferenceRoomToSockets[webrtc_offer.roomId]) {
-        this.conferenceRoomToSockets[webrtc_offer.roomId].forEach((s) => {
-        /*Testcase1.원래는 로직은 webrtc_offer로 가서 -> createSDPAnswer로 날리는게 맞음
-          Testcase2. 그런데 현재는 peer가 하나를 가지고 두개를 가정하는 시험이기 때문에 answer를 받음 */
-          s.emit('webrtc_answer', webrtc_offer.sdp);
-        });
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    
-  }
-
-  @SubscribeMessage('webrtc_answer')
-  receiveWebRTCAnswer(@MessageBody() webrtc_Answer) {
-    this.logger.log(`Broadcasting webrtc_Answer event to peers in room ${webrtc_Answer.roomId}`)
-    console.log(webrtc_Answer)
-  
-    if (this.conferenceRoomToSockets[webrtc_Answer.roomId]) {
-      this.conferenceRoomToSockets[webrtc_Answer.roomId].forEach((s) => {
-        s.emit('webrtc_offer', webrtc_Answer.sdp);
-      });
-    }
-    /*# sdp의 이해 
-     sdp: {
-      type: 'answer',
-      sdp: 'v=0\r\n' +
-        'o=- 6881990246827507780 2 IN IP4 127.0.0.1\r\n' +
-          🔹    "Session-ID"          "IP4는 Network Type" "127.0.0.1는 Address Type"
-        's=-\r\n' +
-        't=0 0\r\n' +
-        'a=sendrecv\r\n'
-          🔹단말은 미디어 송신 및 수신 가능 예) 전화기로 통화가 가능한 채널
-        'a=msid-semantic: WMS\r\n'
-    }
-
-    */
-  }
-  @SubscribeMessage('webrtc_ice_candidate')
-  receiveWebRTCIceCandidate(@MessageBody() webrtc_ice_candidate) {
-    this.logger.log(`Broadcasting webrtc_ice_candidate event to peers in room ${webrtc_ice_candidate.roomId}`)
-    //console.log(webrtc_ice_candidate);
-    if (this.conferenceRoomToSockets[webrtc_ice_candidate.roomId]) {
-      this.conferenceRoomToSockets[webrtc_ice_candidate.roomId].forEach((s) => {
-        s.emit('webrtc_ice_candidate', webrtc_ice_candidate);
-      });
-    }
-
-  }
-
-  
-
 }

@@ -271,18 +271,10 @@ export class MemberService {
     const secs = now.getSeconds();
     if (user) {
       
-      user.lastActivityAt = `${years}년 ${month+1}월 ${day}일 ${hours+9}:${minutes}${secs}`;
+      user.lastActivityAt = `${years}년 ${month+1}월 ${day}일 ${hours+9}:${minutes}:${secs}`;
       await this.members.save(user);
     }
   }
-  /*
-   * @Author : OSOOMAN
-   * @Date : 2024.1.6
-   * @Function : 계정 상태 활성화 기능
-   * @Parm :
-   * @Return :
-   * @Explain : 고객이 활성화 화면에서 직접 휴면 상태에서 '활성화 상태'로 변경한다.
-   */
 
   async activateUser(userId: string): Promise<Member | undefined> {
     const dormantMember = await this.members.findOneBy({

@@ -105,10 +105,10 @@ export class MemberController {
       const result = await this.memberService.login(req.body);
 
       if (result.ok) {
-        //#세션 설정
+        /*#세션 설정
         const session: any = req.session;
         session.token = result.token;
-        session.user = req.body.userId; //사용자가 정의한 임의의 지정 값2
+        session.user = req.body.userId; 
         const memberRole = await this.memberService.getMemberRole(req.body);
         session.memberRole = memberRole;
         session.sessionID = 'osm';
@@ -116,7 +116,7 @@ export class MemberController {
         session.cookie.httpOnly = true;
         session.cookie.secure = true;
         this.logger.log(`${session.user} 회원님이 로그인이 하였습니다.`);
-        console.log(session);
+        console.log(session);*/
         //#로그인 후 활동 추적
         await this.memberService.trackUserActivity(req.body.userId);
 

@@ -74,20 +74,19 @@ import { CoreEntity } from 'src/common/entites/core.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm'; 
 import * as bcrypt from "bcrypt";
 import { InternalServerErrorException } from '@nestjs/common';
-import { registerEnumType } from '@nestjs/graphql';
 import { Deal } from 'src/deals/entitles/deal.entity';
 import { Order } from 'src/orders/entities/order.entity';
 import { Store } from 'src/orders/entities/store.entity';
 
 
+//#graphql 사용의 경우 설치 필요: npm i @nestjs/graphql -> registerEnumType(MemberRole, { name: 'MemberRole'});
 export enum MemberRole {
   admin = "admin",
   manager = "manager",
   client = "client",
   any = "any"
 }
-//#설치 필요: npm i @nestjs/graphql
-registerEnumType(MemberRole, { name: 'MemberRole'});
+
 
 @Entity()
 export class Member extends CoreEntity {
