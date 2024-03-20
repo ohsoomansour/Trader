@@ -15,14 +15,12 @@ class Payment {
 @Entity()
 export class Store extends CoreEntity{
 
-  // 고객 : 저장  = 1 : N
   @ManyToOne(
     () => Member,
     member => member.store
   )
   member:Member;
 
-  //  Store : Deal = m : n   1. OneToMany 맞음 2. 
   @ManyToOne(
     () => Deal,
     (deal) => deal.store

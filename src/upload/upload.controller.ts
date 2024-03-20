@@ -40,7 +40,12 @@ const BUCKET_NAME = 'goodganglabs3';
 @Controller('upload')
 export class UploadController {
   constructor(private configService: ConfigService) {}
-
+  /*@Author: osooman
+   *@Param: 인터셉터를 통해서 '파일'을 가져온다.
+   *@Function: AWS S3 bucket에 업로드하고 url을 생성한다.
+   *@return: url
+   *@Explain: 회사 이미지 및 로봇 상품 동영상 파일을 업로드할 때 uploadFile 함수가 실행된다.
+   */
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file) {
@@ -72,6 +77,4 @@ export class UploadController {
       return null;
     }
   }
-
-  //동영상 업로드
 }

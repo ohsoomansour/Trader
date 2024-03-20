@@ -10,7 +10,6 @@ import { Robot } from 'src/deals/entitles/robot.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { Store } from './entities/store.entity';
 
-
 @Module({
   imports: [TypeOrmModule.forFeature([Order, OrderItem, Robot, Deal, Member, Store])],
   controllers:[OrderController],

@@ -7,7 +7,6 @@ import {Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
 import { Robot } from "./robot.entity";
 import { Store } from "src/orders/entities/store.entity";
 
-
 @Entity()
 export class Deal extends CoreEntity {
 
@@ -49,6 +48,4 @@ export class Deal extends CoreEntity {
   )
   store:Store;
   
-
-
 }

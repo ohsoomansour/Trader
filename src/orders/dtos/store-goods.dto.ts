@@ -4,7 +4,6 @@ export class Payment{
   maintenanceYN:boolean;
   maintenance_cost:number;
   total:number; 
-  
 }
 export class StoreGoodsInputDTO {
   dealId: string;

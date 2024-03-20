@@ -5,7 +5,7 @@ import { Member } from 'src/member/entites/member.entity';
 import { Column, Entity, ManyToOne} from "typeorm";
 import { OrderItem } from './order-item.entity';
 
-//택배조회 api, 결제 api(Naver), 
+
 export enum OrderStatus  {
   Pending = "Pending",
   OrderCompleted = "OrderComplete",

@@ -46,13 +46,11 @@ export class OrderService {
 
   async makeaOrder(orderInput:OrderInputDTO, customer: Member):Promise<OrderOutputDTO>{
     try{
-      //entity 
       const deal = await this.deals.findOne({
         where:{
           id: orderInput.dealId
         }
       })
-      //아래는 엔티티가 아니다 따라서 
       const robot = await this.robots.findOne({
         where:{
           id: orderInput.items.robot.id,
@@ -63,7 +61,7 @@ export class OrderService {
         options: orderInput.items.options
       },)
       await this.orderitems.save(orderitem)
-      //seller 찾아서 주문을 넣어주자
+
       const seller = await this.members.findOne({
         where:{
           userId: orderInput.seller,
@@ -100,7 +98,7 @@ export class OrderService {
         }
       }
     })
-    console.log("totalSavings",totalSavings);
+
     const myOrders = await this.orders.find({
       where:{
         customer:{
@@ -204,7 +202,6 @@ export class OrderService {
        this.logger.log('salesCount & totalSales:');
        console.log(salesCount, totalSales);
       
-
       return {
         takingOrders,
         totalPages: Math.ceil(totalOrders / 3),
@@ -229,7 +226,6 @@ export class OrderService {
       }
     })
     //2. store 리스트에 deal를 (배열 형태로 ) 저장 
-
     const newStore = this.stores.create({
       member: me,  
       deal: oneDeal,
@@ -270,8 +266,7 @@ export class OrderService {
         }
       }
     })
-    this.logger.log("storeGoods에서 나의 totalSavings 확인:")
-    console.log(totalSavings);
+
     return {
       mySavings,
       totalPages: Math.ceil(totalSavings / 3),
