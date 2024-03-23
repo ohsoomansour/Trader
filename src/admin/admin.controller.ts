@@ -50,7 +50,7 @@ export class AdminController {
         URL PREVIEW: http://localhost:3000/admin/members
       - 주의사항: 로그인 후 반환한 jwt를 사용해야 하며 refresh 후 사용하면 안된다.
                  다시 로그인 후 새로운 토큰을 발급받고 해야된다.
-        */
+  */
   @Get('/members')
   @Role(['admin'])
   @UseGuards(AuthGuard)

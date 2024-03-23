@@ -3,8 +3,7 @@ import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { JwtService } from './jwt.service';
 import { MemberService } from 'src/member/member.service';
-//import { InjectRepository } from '@nestjs/typeorm';
-//import { Member } from 'src/member/entites/member.entity';
+
 
 @Injectable()
 export class JwtMiddleware implements NestMiddleware {

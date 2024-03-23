@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
     //Retrieve 'metadata for a specified key' for a specified target.
     const roles = this.reflector.get<AllowedRoles>(
       'roles', //🌟이 key는 role.decorator.ts 에서 SetMetadata('roles', roles) 설정
-      context.getHandler() //🌟docs: 호출 될 request에 대한 handler에 대한 참조를 반환 
+      context.getHandler() //🌟docs: 호출 될 request에 대한 handler(Function)에 대한 참조를 반환 (https://docs.nestjs.com/fundamentals/execution-context)
     );  
     this.logger.log(`request에 해당하는 controller's Role은['${roles}']`);  // ['admin'] ['clinet']
 

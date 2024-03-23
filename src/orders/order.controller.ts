@@ -20,7 +20,6 @@ export class OrderController {
   makeAOrder(@Req() req:Request, @Body() orderInput:OrderInputDTO ) {
     this.logger.log('/order/make 컨트롤러에 customer, req.body확인:')
     const customer:Member = req['member'];
-    
     return this.orderService.makeaOrder(orderInput, customer)
   }
  /*@Author: osooman 
@@ -31,7 +30,6 @@ export class OrderController {
   @Get('/info/:page')  
   getMyOrder(@Req() req:Request, @Param('page') page:number) {
     const customer:Member = req['member'];
-
     return this.orderService.getMyOrder(customer, page); 
   }
 
@@ -43,7 +41,6 @@ export class OrderController {
   @Get('/takeorders/:page')
   takeOrders(@Req() req: Request, @Param('page') page:number) {
     this.logger.log('takeorders');
-    console.log(page);
     const seller:Member = req['member']
     return this.orderService.takeOrders(seller, page);
 
@@ -57,8 +54,7 @@ export class OrderController {
   storeGoods(@Req() req: Request, @Body() storeGoodsInput:StoreGoodsInputDTO){
     this.logger.log('storegoods의 me & storeGoodsInput:');
     const me:Member = req['member'];
-    console.log(me, storeGoodsInput);
-    
+
     return this.orderService.storeGoods(storeGoodsInput, me);
   }
  /*@Author: osooman 
@@ -81,7 +77,6 @@ export class OrderController {
   @Delete('/deletestoredgoods/:storageId')
   deleteStoredGoods(@Param('storageId') storageId: number) {
     this.logger.log('/deletestoredgoods:')
-    console.log(storageId)
     this.orderService.deleteStoredGoods(storageId);
   }
 

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Injectable} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 /*
  * @Date : 2024.01.03 (수)
@@ -25,26 +25,24 @@ export class ChatService {
       this.filteredText = this.filteredText.replace(regEx, '***')
       //console.log(this.filteredText)
 
-      
     });
-    console.log(this.filteredText);
+
     return this.filteredText;
   }
   checkProfanity(filteredMessage:string) {
     const result = new RegExp(/\*\*\*/gi).test(filteredMessage);
     return result;
   }
-  
-  
+  /*
   //#폭탄 메시지 방지: 채팅의 길이가 30 얼마 이상 넘어가면 삭제:  [].
   chattingManagement(@Body() msgArr:string[]){
     return msgArr;
-    /*
+    
     if(msgArr.length >= 10) {
       return msgArr.slice(4)
     } else  {
       return msgArr
     }
-    */
-  }
+    
+  }*/
 }

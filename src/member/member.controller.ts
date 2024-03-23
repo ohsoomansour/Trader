@@ -48,18 +48,7 @@ export class MemberController {
     this.memberService = memberService;
   }
   private logger = new Logger('memberController');
-  /*
-   * @Author : OSOOMAN
-   * @Date : 2024.1.7
-   * @Function :
-   * @Parm :
-   * @Return :
-   * @Explain :
-   */
-  @Get('/home')
-  goHome() {
-    return 'Welcom back to Member Home';
-  }
+
   /*
    * @Author : OSOOMAN
    * @Date : 2023.12.21
