@@ -160,7 +160,7 @@
    
 import { MiddlewareConsumer, Module, NestModule, RequestMethod, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Member } from './member/entites/member.entity';
+import { Member } from './member/entities/member.entity';
 import { MemberModule } from './member/member.module';
 import { AdminModule } from './admin/admin.module';
 import { EventsModule } from './events/events.module';
@@ -174,7 +174,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 //import { JwtModule } from '@nestjs/jwt';
 import { UploadModule } from './upload/upload.module';
-import { Verification } from './member/entites/verification.entity';
+import { Verification } from './member/entities/verification.entity';
 import { Deal } from './deals/entitles/deal.entity';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
@@ -183,6 +183,8 @@ import { Robot } from './deals/entitles/robot.entity';
 import { OrderModule } from './orders/order.module';
 import { Store } from './orders/entities/store.entity';
 import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton.module';
+import { CommentModule } from './comment/comment.module';
+import { Comment } from './comment/entities/comment.entity';
 
 @Module({
   imports: [
@@ -217,7 +219,7 @@ import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton
           }),
       synchronize: true,
       logging: true,
-      entities: [Member, Verification, Deal, Order, OrderItem, Robot, Store], //[join(__dirname, '/**/*.entity.ts')]
+      entities: [Member, Verification, Deal, Order, OrderItem, Robot, Store, Comment], //[join(__dirname, '/**/*.entity.ts')]
     }),
     MemberModule,
     AdminModule,
@@ -229,7 +231,8 @@ import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton
     UploadModule,
     OrderModule,
     DealModule,
-    PhoneValidationModule
+    PhoneValidationModule,
+    CommentModule
     /*#JwtModule등록 방법2.
     JwtModule.registerAsync({
       imports: [ConfigModule],

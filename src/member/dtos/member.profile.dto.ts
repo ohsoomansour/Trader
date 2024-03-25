@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { CoreOutput } from "src/common/dtos/output.dto";
-import { Member } from "../entites/member.entity";
+import { Member } from "../entities/member.entity";
 
 export class MemberProfileInput {
   userId: number;

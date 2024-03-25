@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { SetMetadata } from "@nestjs/common";
-import { MemberRole } from "src/member/entites/member.entity";
+import { MemberRole } from "src/member/entities/member.entity";
 
 /* 🔷SetMetadata 
   - doc:📄https://docs.nestjs.com/fundamentals/execution-context#reflection-and-metadata

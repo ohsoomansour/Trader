@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AupdateMemberInfoDTO } from 'src/member/dtos/updateMember.dto';
-import { Member } from 'src/member/entites/member.entity';
+import { Member } from 'src/member/entities/member.entity';
 import { Like, Repository } from 'typeorm';
 /*constructor(private readonly usersService: UsersService ) {}
  [소프트웨어 설계 SOLID ]

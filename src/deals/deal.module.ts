@@ -7,7 +7,7 @@ import { OrderItem } from 'src/orders/entities/order-item.entity';
 import { DealService } from './deal.service';
 import { Deal } from './entitles/deal.entity';
 import { Robot } from './entitles/robot.entity';
-import { Member } from 'src/member/entites/member.entity';
+import { Member } from 'src/member/entities/member.entity';
 import { Store } from 'src/orders/entities/store.entity';
 
 @Module({

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { IsString } from "class-validator";
-import { MemberRole } from "../entites/member.entity";
+import { MemberRole } from "../entities/member.entity";
 import { CoreOutput } from "src/common/dtos/output.dto";
 
 //Admin이 프로필을 수정하는 경우

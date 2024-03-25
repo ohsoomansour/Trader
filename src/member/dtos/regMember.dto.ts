@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { IsEmail, IsString } from "class-validator";
 import { CoreOutput } from "src/common/dtos/output.dto";
-import { MemberRole } from "../entites/member.entity";
+import { MemberRole } from "../entities/member.entity";
 
 /*
   + -------------------------------------------DTO란?-----------------------------------------------+ 

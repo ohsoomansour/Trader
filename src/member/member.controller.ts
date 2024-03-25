@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { Request, Response } from 'express';
-import { Member } from './entites/member.entity';
+import { Member } from './entities/member.entity';
 import { Role } from 'src/auth/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CupdateMemberInfoDTO } from './dtos/updateMember.dto';

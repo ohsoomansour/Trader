@@ -70,13 +70,14 @@
   */
 
 
-import { CoreEntity } from 'src/common/entites/core.entity';
+import { CoreEntity } from 'src/common/entities/core.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm'; 
 import * as bcrypt from "bcrypt";
 import { InternalServerErrorException } from '@nestjs/common';
 import { Deal } from 'src/deals/entitles/deal.entity';
 import { Order } from 'src/orders/entities/order.entity';
 import { Store } from 'src/orders/entities/store.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 
 
 //#graphql 사용의 경우 설치 필요: npm i @nestjs/graphql -> registerEnumType(MemberRole, { name: 'MemberRole'});
@@ -86,7 +87,6 @@ export enum MemberRole {
   client = "client",
   any = "any"
 }
-
 
 @Entity()
 export class Member extends CoreEntity {
@@ -102,8 +102,8 @@ export class Member extends CoreEntity {
 
   @Column({nullable:true})
   address: string;
-  @Column({nullable:true})
 
+  @Column({nullable:true})
   mobile_phone:string;
   
   @Column({nullable:true})
@@ -148,18 +148,24 @@ export class Member extends CoreEntity {
   )
   store:Store[];
 
+  @OneToMany(
+    () => Comment,
+    comment => comment.writer 
+  )
+  comment:Comment;  
+
 
   @BeforeInsert() //@explain:최초 삽입 시, (값이 없을 때) 아래의 method를 호출
   @BeforeUpdate() //@explain: 최초 삽입 후 두 번째 Update부터 아래의 method를 호출이다. 
   async hashingPw(): Promise<void> {
     console.log('@BeforeUpdate 핸들러: hashingPw method:')
-    console.log(this.password) //로그인 시 undefined 정상(this = <Member> instance 이고 현재 hide상태)
-    console.log(this.userId) //osoomansour36@naver.com
+    //console.log(this.password) //로그인 시 undefined 정상(this = <Member> instance 이고 현재 hide상태)
+    //console.log(this.userId) //osoomansour36@naver.com
     if(this.password){
       try {
     //@Explain: entity에 삽입 또는 업데이트 전에 암호화 saltOrRounds이 높을 수록 암호화🔺 속도 🔻   
         this.password = await bcrypt.hash(this.password, 10)
-        console.log(`해싱 후 패스워드:${this.password}`)
+        //console.log(`해싱 후 패스워드:${this.password}`)
       } catch (e) {
         console.log(e)
         throw new InternalServerErrorException()

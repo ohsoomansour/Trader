@@ -2,7 +2,7 @@
 import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AllowedRoles } from './role.decorator';
-import { MemberRole } from 'src/member/entites/member.entity';
+import { MemberRole } from 'src/member/entities/member.entity';
 //import { GqlExecutionContext } from '@nestjs/graphql';
 /* #CanActivate 인터페이스의 이해
  * @param context Current execution context. Provides access to details about

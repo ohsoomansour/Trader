@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Order } from "./entities/order.entity";
 import { Repository } from "typeorm";
 import { OrderInputDTO, OrderOutputDTO } from "./dtos/order.dto";
-import { Member } from "src/member/entites/member.entity";
+import { Member } from "src/member/entities/member.entity";
 import { Deal } from "src/deals/entitles/deal.entity";
 import { Robot } from "src/deals/entitles/robot.entity";
 import { OrderItem } from "./entities/order-item.entity";

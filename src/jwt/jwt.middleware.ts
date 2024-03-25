@@ -28,14 +28,12 @@ export class JwtMiddleware implements NestMiddleware {
       
       if( typeof decoded === 'object' && decoded.hasOwnProperty('id')) {
       const { member, ok } = await this.memberService.findById(decoded['id']); 
-      this.logger.log(`JWT MiddlewWare의 token의 member 정보:`)
-      console.log(member);
+      this.logger.log(`JWT MiddlewWare의 token의 member 정보:`);
       //⭐미들웨어가 원하는 object를 바꿀수있다 >> request object를 모든  resolver에서 사용 할 수 있다 
-       if(ok) {
+      if(ok) {
         req['member'] = member;
        }
       }
-
     } catch (e) {}
     
     } 

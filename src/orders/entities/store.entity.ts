@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 
-import { CoreEntity } from "src/common/entites/core.entity";
+import { CoreEntity } from "src/common/entities/core.entity";
 import { Deal } from "src/deals/entitles/deal.entity";
-import { Member } from "src/member/entites/member.entity";
+import { Member } from "src/member/entities/member.entity";
 import {Column, Entity, ManyToOne} from "typeorm";
 
 class Payment {

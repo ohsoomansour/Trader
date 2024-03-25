@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Length } from "class-validator";
-import { CoreEntity } from "src/common/entites/core.entity";
-import { Member } from "src/member/entites/member.entity";
+import { CoreEntity } from "src/common/entities/core.entity";
+import { Member } from "src/member/entities/member.entity";
 import { Order } from "src/orders/entities/order.entity";
 import {Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
 import { Robot } from "./robot.entity";

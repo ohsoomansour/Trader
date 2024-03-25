@@ -4,8 +4,8 @@ import { JwtService } from './jwt.service';
 import { CONFIG_OPTIONS } from 'src/common/common.constant';
 import { MemberService } from 'src/member/member.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Member } from 'src/member/entites/member.entity';
-import { Verification } from 'src/member/entites/verification.entity';
+import { Member } from 'src/member/entities/member.entity';
+import { Verification } from 'src/member/entities/verification.entity';
 /*#Dynmic Module
  1. jwt모듈을 @Global로 만들어줘서 전역으로 설정  
  2. options: PRIVATE_KEY는 어디서? 

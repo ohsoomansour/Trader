@@ -3,7 +3,7 @@ import {  Body, Controller, Delete, Get, Logger, Param, Patch, Post, Req } from 
 import { OrderService } from './order.service';
 import { StoreGoodsInputDTO } from './dtos/store-goods.dto';
 import { OrderInputDTO } from './dtos/order.dto';
-import { Member } from 'src/member/entites/member.entity';
+import { Member } from 'src/member/entities/member.entity';
 
 
 @Controller('order')

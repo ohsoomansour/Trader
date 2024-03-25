@@ -4,7 +4,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Deal } from "./entitles/deal.entity";
 import { Repository } from "typeorm";
-import { Member } from "src/member/entites/member.entity";
+import { Member } from "src/member/entities/member.entity";
 import { Robot } from "./entitles/robot.entity";
 import { MakeADealInputDTO } from "./dtos/make-deal.dto";
 

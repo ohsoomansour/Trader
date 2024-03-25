@@ -52,13 +52,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {  Repository } from 'typeorm';
-import { Member } from './entites/member.entity';
+import { Member } from './entities/member.entity';
 import { CreateMemberInputDTO, CreateMemberOutputDTO } from './dtos/regMember.dto';
 import { LoginInputDTO, MemberRole } from './dtos/login.dto';
 import { JwtService } from 'src/jwt/jwt.service';
 import { MemberProfileOutput } from './dtos/member.profile.dto';
 import { CupdateMemberInfoDTO, CupdateMemberOutputDTO } from './dtos/updateMember.dto';
-import { Verification } from './entites/verification.entity';
+import { Verification } from './entities/verification.entity';
 
 @Injectable()
 export class MemberService {

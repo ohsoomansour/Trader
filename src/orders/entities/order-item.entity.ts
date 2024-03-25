@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { CoreEntity } from 'src/common/entites/core.entity';
+import { CoreEntity } from 'src/common/entities/core.entity';
 import { Robot } from 'src/deals/entitles/robot.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Order } from './order.entity';

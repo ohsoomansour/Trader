@@ -4,7 +4,7 @@ import { Body, Controller, Delete, Get, Logger, Param, Post, Req } from "@nestjs
 import { DealService } from "./deal.service";
 import { Role } from "src/auth/role.decorator";
 import { MakeADealInputDTO } from "./dtos/make-deal.dto";
-import { Member } from "src/member/entites/member.entity";
+import { Member } from "src/member/entities/member.entity";
 
 @Controller('/seller')
 export class DealController {
