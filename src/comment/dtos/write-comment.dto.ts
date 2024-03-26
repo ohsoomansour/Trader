@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-export class WriteCommentInputDTO{
+export class WriteCommentInputDTO {
+
   content:string;
 }

@@ -3,7 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Comment } from "./entities/comment.entity";
 import { Repository } from "typeorm";
-import { WriteCommentInputDTO } from "./dtos/comment.dto";
+import { WriteCommentInputDTO } from "./dtos/write-comment.dto";
+import { UpdateCommentInputDTO, UpdateCommentOutputDTO } from "./dtos/update-comment.dto";
 
 @Injectable()
 export class CommentService {
@@ -17,7 +18,38 @@ export class CommentService {
     const comment = this.comments.create({
       content:writingInput.content
     });
-    this.comments.save(comment);
-
+    await this.comments.save(comment);
   }
+
+  async delComment(commentId: number){
+    this.comments.delete({
+     id: commentId 
+    })
+  }
+
+  async updateComment(updateInfo: UpdateCommentInputDTO): Promise<UpdateCommentOutputDTO>{
+    try {
+      const selectedContent = await this.comments.findOne({
+        where:{
+          id:updateInfo.id
+        }
+      })
+      if(selectedContent){
+        selectedContent.content = updateInfo.content;
+        return {
+          ok:true,
+        }
+      } else {
+        return {
+          ok:false,
+          error: " 댓글이 제대로 업데이트가 되지 않았습니다!"
+        }
+      }
+      
+    } catch(e){
+      console.error(e);
+    }
+    
+  }
+
 } 
