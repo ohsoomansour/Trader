@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Body, Controller, Delete, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { WriteCommentInputDTO } from "./dtos/write-comment.dto";
 import { UpdateCommentInputDTO } from "./dtos/update-comment.dto";
@@ -8,6 +8,12 @@ import { UpdateCommentInputDTO } from "./dtos/update-comment.dto";
 @Controller('comments')
 export class CommentController{
   constructor(private readonly commentService: CommentService){}
+
+  @Get("/myComment")
+  getMyComment(@Req() req) {
+     const me = req['member'];
+     
+  }
 
   @Post('/writing')
   writeComment(@Body() writingInput: WriteCommentInputDTO) {

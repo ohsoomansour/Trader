@@ -5,6 +5,7 @@ import { Comment } from "./entities/comment.entity";
 import { Repository } from "typeorm";
 import { WriteCommentInputDTO } from "./dtos/write-comment.dto";
 import { UpdateCommentInputDTO, UpdateCommentOutputDTO } from "./dtos/update-comment.dto";
+import { Member } from "src/member/entities/member.entity";
 
 @Injectable()
 export class CommentService {
@@ -13,6 +14,22 @@ export class CommentService {
     private readonly comments: Repository<Comment>
   ){}
   
+  async getAllComments():Promise<Comment[]>{
+    const allComments = await this.comments.find();
+    return allComments;
+  }
+
+
+  async getMyComment(me:Member) {
+    const myComment = await this.comments.findOne({
+      where:{
+        writer:{
+          userId: me.userId,
+        }
+      }
+    })
+  }
+
   
   async writeComment(writingInput: WriteCommentInputDTO):Promise<void> {
     const comment = this.comments.create({
