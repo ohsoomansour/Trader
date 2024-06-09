@@ -18,6 +18,7 @@ import { Role } from 'src/auth/role.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CupdateMemberInfoDTO } from './dtos/updateMember.dto';
 import { CreateMemberOutputDTO } from './dtos/regMember.dto';
+import { CheckingPwDTO } from './dtos/checkingPw.dto';
 
 //import { LoginOutputDTO } from './dtos/login.dto';
 /*#SESSION  COOKIE란? 
@@ -49,7 +50,7 @@ export class MemberController {
   }
   private logger = new Logger('memberController');
 
-  /*
+  /**
    * @Author : OSOOMAN
    * @Date : 2023.12.21
    * @Function : 멤버 등록 함수
@@ -73,7 +74,7 @@ export class MemberController {
     }
   }
 
-  /*
+  /**
   * @Author : OSOOMAN
   * @Date : 2023.12.23
   * @Function : 로그인 후 세션 설정 및 계정 활동 트래킹
@@ -119,7 +120,7 @@ export class MemberController {
       this.logger.debug('로그인 아이디와 비밀번호를 확인하세요!');
     }
   }
-  /*
+  /**
    * @Author : OSOOMAN
    * @Date : 2024.1.17
    * @Function : 유저의 정보를 가져온다.
@@ -139,8 +140,28 @@ export class MemberController {
       this.logger.debug('header에 x-jwt 값을 확인하세요!');
     }
   }
+  /**
+   * @Author : OSOOMAN
+   * @Date : 2024.6.9
+   * @Function : 비밀번호 중복 확인
+   * @Param : 기존 비밀번호
+   * @Return : boolean 값 - true 이면 기존 패스워드랑 같고 / 그렇지 않으면 패스워드가 다름
+   * @Explain :
+   */
+  @Role(['any'])
+  @Post('/confirmPrevPw')
+  async confirmPrevPassword(@Req() req: Request): Promise<CheckingPwDTO> {
+    try {
+      const result = await this.memberService.confrimPrevPw(req.body);
+      return {
+        ok: result,
+      };
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
-  /*
+  /**
    * @Author : OSOOMAN
    * @Date : 2024.1.17
    * @Function : 사용자 정보 변경하는 함수
@@ -164,7 +185,7 @@ export class MemberController {
     }
   }
 
-  /*
+  /**
    * @Author : OSOOMAN
    * @Date : 2024.1.6
    * @Function : 계정의 상태를 활성화하는 함수
@@ -186,7 +207,7 @@ export class MemberController {
     }
   }
 
-  /*
+  /**
    * @Author : OSOOMAN
    * @Date : 2023.12.23
    * @Function : 세션 확인(개발 용도)

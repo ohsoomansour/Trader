@@ -201,12 +201,13 @@ export class MemberService {
   }
   async editProfile(
     id: number,
-    { userId, password, address }: CupdateMemberInfoDTO,
+    { userId, password, address, mobile_phone }: CupdateMemberInfoDTO,
   ): Promise<CupdateMemberOutputDTO> {
+
+    //pw, address 경우의 수 pw / address / pw+address의 경우 
     try {
       const user = await this.members.findOne({
         where: { id },
-        
       });
       
       if (userId) {
@@ -234,12 +235,16 @@ export class MemberService {
             ok:false,
             error: '기존 패스워드와 같습니다!'
           }
+        } else {
+          user.password = password;
         }
-        user.password = password;
 
       }
       if(address){
         user.address = address;
+      }
+      if(mobile_phone){
+        user.mobile_phone = mobile_phone;
       }
       await this.members.save(user)
       return {
@@ -250,7 +255,7 @@ export class MemberService {
     }
   }
 
-  /*
+  /***
    * @Author : OSOOMAN
    * @Date : 2024.1.6
    * @Function : (마지막 로그인 시점부터?) 휴면 상태 추적 및 설정
@@ -274,6 +279,22 @@ export class MemberService {
       user.lastActivityAt = `${years}년 ${month+1}월 ${day}일 ${hours+9}:${minutes}:${secs}`;
       await this.members.save(user);
     }
+  }
+
+  async confrimPrevPw({userId, password}: CupdateMemberInfoDTO): Promise<boolean>{
+    // 비번 푼 것이 같다면ㅇ
+    try {
+      const member = await this.members.findOne({
+        where: { userId:userId },
+        select: ['userId', 'password']
+      });
+      const result = await member.checkingPw(password)
+      this.logger.log("checkingResult:"+result)
+      return result;
+    } catch(e){
+      console.error(e);
+    }
+
   }
 
   async activateUser(userId: string): Promise<Member | undefined> {

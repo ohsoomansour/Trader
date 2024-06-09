@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Comment } from "./entities/comment.entity";
 import { Repository } from "typeorm";
-import { WriteCommentInputDTO } from "./dtos/write-comment.dto";
+import { CommentInputDTO} from "./dtos/write-comment.dto";
 import { UpdateCommentInputDTO, UpdateCommentOutputDTO } from "./dtos/update-comment.dto";
 import { Member } from "src/member/entities/member.entity";
 
@@ -19,19 +19,18 @@ export class CommentService {
     return allComments;
   }
 
-
   async getMyComment(me:Member) {
-    const myComment = await this.comments.findOne({
+    await this.comments.findOne({
       where:{
         writer:{
           userId: me.userId,
         }
       }
     })
-  }
 
+  }
   
-  async writeComment(writingInput: WriteCommentInputDTO):Promise<void> {
+  async typeComment(me:Member, writingInput: CommentInputDTO):Promise<void> {
     const comment = this.comments.create({
       content:writingInput.content
     });

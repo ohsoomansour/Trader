@@ -16,6 +16,7 @@ export class CupdateMemberInfoDTO {
   userId:string;
   password:string;
   address:string;
+  mobile_phone:string;
 }
 
 export class CupdateMemberOutputDTO extends CoreOutput{}

@@ -94,7 +94,7 @@ export class Member extends CoreEntity {
   @Column()
   userId: string;
   
-  @Column({select:false})
+  @Column({select:false}) // {select:true}의 경우 비번 가져옴
   password: string;
 
   @Column({nullable:true})
@@ -172,7 +172,7 @@ export class Member extends CoreEntity {
       }
     }
   }
-
+  
   async checkingPw(reqPassword: string) : Promise<boolean> {
     try {
       console.log(`로그인 입력 패스워드:${reqPassword}`);
@@ -180,6 +180,7 @@ export class Member extends CoreEntity {
       const ok = await bcrypt.compare(reqPassword, this.password); //this => member 변수, select로 password를 가져옴
       console.log('checkingPw의 결과 ok값:')
       console.log(ok);
+      
       return ok;
     } catch(e) {
 

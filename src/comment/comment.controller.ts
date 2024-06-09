@@ -2,12 +2,17 @@
 
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from "@nestjs/common";
 import { CommentService } from "./comment.service";
-import { WriteCommentInputDTO } from "./dtos/write-comment.dto";
+import { CommentInputDTO } from "./dtos/write-comment.dto";
 import { UpdateCommentInputDTO } from "./dtos/update-comment.dto";
 
 @Controller('comments')
 export class CommentController{
   constructor(private readonly commentService: CommentService){}
+
+  @Get("/allComments")
+  getAllComments(){
+    return this.commentService.getAllComments();
+  }
 
   @Get("/myComment")
   getMyComment(@Req() req) {
@@ -15,9 +20,10 @@ export class CommentController{
      
   }
 
-  @Post('/writing')
-  writeComment(@Body() writingInput: WriteCommentInputDTO) {
-    this.commentService.writeComment(writingInput)
+  @Post('/typing')
+  typeComment(@Req() req, @Body() typingInput: CommentInputDTO) {
+    const me = req['member'];
+    this.commentService.typeComment(me, typingInput)
   }
   
   @Delete('/delComment/:id')
