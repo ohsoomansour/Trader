@@ -37,7 +37,7 @@ export class AdminController {
     this.adminService = adminService;
   }
   private logger = new Logger('admin');
-  /*
+  /** 
    * @Author : OSOOMAN
    * @Date : 2024.1.5
    * @Function : 멤버 전체를 조회
@@ -60,7 +60,7 @@ export class AdminController {
     return res.status(200).send(members);
   }
 
-  /*
+  /**
    * @Author : OSOOMAN
    * @Date : 2024.1.5
    * @Function : 회원 1명을 검색하는 함수
@@ -81,7 +81,7 @@ export class AdminController {
     return this.adminService.searchAmember(name);
   }
 
-  /*
+  /**
    * @Author : OSOOMAN
    * @Date : 2024.1.5
    * @Function : 회원의 일부 속성을 업데이트
@@ -102,7 +102,7 @@ export class AdminController {
     return this.adminService.editProfile(id, memberInfo);
   }
 
-  /*
+  /**
    * @Author : OSOOMAN
    * @Date : 2024.1.6
    * @Function : 고객의 계정을 비활성화하는 기능

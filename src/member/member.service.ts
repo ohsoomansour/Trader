@@ -203,7 +203,7 @@ export class MemberService {
     id: number,
     { userId, password, address, mobile_phone }: CupdateMemberInfoDTO,
   ): Promise<CupdateMemberOutputDTO> {
-
+    this.logger.log("editProfile's service:" + userId + password + address + mobile_phone)
     //pw, address 경우의 수 pw / address / pw+address의 경우 
     try {
       const user = await this.members.findOne({
@@ -222,7 +222,7 @@ export class MemberService {
         );
       }
       this.logger.log('editProfile user의 패스워드')
-      console.log(user.password);
+      console.log(user.password); //undefined
       
       if(password){
         const member = await this.members.findOne({
