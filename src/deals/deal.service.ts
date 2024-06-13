@@ -18,7 +18,7 @@ export class DealService {
     @InjectRepository(Member)
     private readonly members: Repository<Member>,
     @InjectRepository(Product)
-    private readonly robots: Repository<Product>
+    private readonly products: Repository<Product>
   ) {}
   private logger = new Logger('DealService')
 
@@ -28,23 +28,23 @@ export class DealService {
     console.log("makingDealInput.sellerId", makingDealInput.sellerId)
     const sellMember = await this.members.findOne({where: {userId: makingDealInput.sellerId}})
     console.log("sellMember",sellMember);
-    const newProduct = this.robots.create({
+    const newProduct = this.products.create({
       name:makingDealInput.name,
       price:makingDealInput.price,    
       maintenance_cost:makingDealInput.maintenance_cost,    
       description:makingDealInput.description,
-      productURL:makingDealInput.rbURL
+      productURL:makingDealInput.productURL
     })
 
-    await this.robots.save(newProduct);
+    await this.products.save(newProduct);
     await this.deals.save(
       this.deals.create({
-        compa_name:makingDealInput.compa_name, 
-        seller_address:makingDealInput.seller_address,
-        compaBrand_ImgURL:makingDealInput.compaBrand_ImgURL,
-        seller:sellMember,
-        salesManager_mobilephone: makingDealInput.salesManager_mobilephone,
-        porduct: newProduct
+        compa_name : makingDealInput.compa_name, 
+        seller_address : makingDealInput.seller_address,
+        compaBrand_ImgURL : makingDealInput.compaBrand_ImgURL,
+        seller : sellMember,
+        salesManager_mobilephone : makingDealInput.salesManager_mobilephone,
+        product : newProduct
       })
     )
     } catch (e) {
@@ -59,7 +59,7 @@ export class DealService {
           id: 'DESC',
         },
         relations:{
-          porduct: true,
+          product: true,
           seller:true,
         },
         cache:{
@@ -81,7 +81,7 @@ export class DealService {
           }
         },
         relations:{
-          porduct:true
+          product:true
         },
         order:{
           id:'DESC'

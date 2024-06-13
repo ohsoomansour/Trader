@@ -244,7 +244,7 @@ export class OrderService {
       },
       relations:{
         deal:{
-          porduct:true,
+          product:true,
           seller:true,
         },
         member:true

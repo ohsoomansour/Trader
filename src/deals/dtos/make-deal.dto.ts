@@ -13,6 +13,6 @@ export class MakeADealInputDTO  {
   price:number;
   maintenance_cost:number;
   description:string;
-  rbURL:string;
+  productURL:string;
 }
 
