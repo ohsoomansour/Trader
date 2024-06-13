@@ -218,7 +218,7 @@ import { Comment } from './comment/entities/comment.entity';
             database: process.env.DB_NAME,
           }),
       synchronize: true,
-      logging: false,
+      logging: true,
       entities: [Member, Verification, Deal, Order, OrderItem, Product, Store, Comment], //[join(__dirname, '/**/*.entity.ts')]
     }),
     MemberModule,
