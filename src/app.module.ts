@@ -179,7 +179,7 @@ import { Deal } from './deals/entitles/deal.entity';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
 import { DealModule } from './deals/deal.module';
-import { Robot } from './deals/entitles/robot.entity';
+import { Product } from './deals/entitles/product.entity';
 import { OrderModule } from './orders/order.module';
 import { Store } from './orders/entities/store.entity';
 import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton.module';
@@ -218,8 +218,8 @@ import { Comment } from './comment/entities/comment.entity';
             database: process.env.DB_NAME,
           }),
       synchronize: true,
-      logging: true,
-      entities: [Member, Verification, Deal, Order, OrderItem, Robot, Store, Comment], //[join(__dirname, '/**/*.entity.ts')]
+      logging: false,
+      entities: [Member, Verification, Deal, Order, OrderItem, Product, Store, Comment], //[join(__dirname, '/**/*.entity.ts')]
     }),
     MemberModule,
     AdminModule,

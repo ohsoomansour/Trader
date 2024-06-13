@@ -5,7 +5,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Deal } from "./entitles/deal.entity";
 import { Repository } from "typeorm";
 import { Member } from "src/member/entities/member.entity";
-import { Robot } from "./entitles/robot.entity";
+import { Product
+
+ } from "./entitles/product.entity";
 import { MakeADealInputDTO } from "./dtos/make-deal.dto";
 
 @Injectable()
@@ -15,8 +17,8 @@ export class DealService {
     private readonly deals: Repository<Deal>,
     @InjectRepository(Member)
     private readonly members: Repository<Member>,
-    @InjectRepository(Robot)
-    private readonly robots: Repository<Robot>
+    @InjectRepository(Product)
+    private readonly robots: Repository<Product>
   ) {}
   private logger = new Logger('DealService')
 
@@ -26,15 +28,15 @@ export class DealService {
     console.log("makingDealInput.sellerId", makingDealInput.sellerId)
     const sellMember = await this.members.findOne({where: {userId: makingDealInput.sellerId}})
     console.log("sellMember",sellMember);
-    const newRobot = this.robots.create({
+    const newProduct = this.robots.create({
       name:makingDealInput.name,
       price:makingDealInput.price,    
       maintenance_cost:makingDealInput.maintenance_cost,    
       description:makingDealInput.description,
-      rbURL:makingDealInput.rbURL
+      productURL:makingDealInput.rbURL
     })
 
-    await this.robots.save(newRobot);
+    await this.robots.save(newProduct);
     await this.deals.save(
       this.deals.create({
         compa_name:makingDealInput.compa_name, 
@@ -42,7 +44,7 @@ export class DealService {
         compaBrand_ImgURL:makingDealInput.compaBrand_ImgURL,
         seller:sellMember,
         salesManager_mobilephone: makingDealInput.salesManager_mobilephone,
-        robot: newRobot
+        porduct: newProduct
       })
     )
     } catch (e) {
@@ -57,7 +59,7 @@ export class DealService {
           id: 'DESC',
         },
         relations:{
-          robot: true,
+          porduct: true,
           seller:true,
         },
         cache:{
@@ -79,7 +81,7 @@ export class DealService {
           }
         },
         relations:{
-          robot:true
+          porduct:true
         },
         order:{
           id:'DESC'

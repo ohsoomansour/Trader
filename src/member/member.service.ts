@@ -71,7 +71,7 @@ export class MemberService {
     
   ) {}
   private readonly logger  = new Logger();
-  /*
+  /** 
    * @Author : OSOOMAN
    * @Date : 2023.12.21
    * @Function : 회원가입
@@ -118,7 +118,7 @@ export class MemberService {
       };
     }
   }
-  /*
+  /** 
    * @Author : OSOOMAN
    * @Date : 2023.12.23
    * @Function : 회원 로그인
@@ -143,7 +143,7 @@ export class MemberService {
       if (!member) {
         return {
           ok: false,
-          error: 'Member do not exist',
+          error: '아이디가 존재하지 않습니다! (Member do not exist)',
         };
       }
 
@@ -151,9 +151,9 @@ export class MemberService {
       if (!confirmPw) {
         return {
           ok: false,
-          error: 'The password is wrong',
+          error: '비밀번호가 일치하지 않습니다! (The password is wrong!)',
         };
-      }
+      } 
       const token = this.jwtService.sign(member.userId);
       return {
         ok: true,

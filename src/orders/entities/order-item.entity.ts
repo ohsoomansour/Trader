@@ -1,25 +1,28 @@
 /* eslint-disable prettier/prettier */
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Robot } from 'src/deals/entitles/robot.entity';
+import { Product } from 'src/deals/entitles/product.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Order } from './order.entity';
 
-export class RobotOption {
+export class ProductOption {
   maintenanceYN:boolean;
   maintenance_cost: number;
+  option1:string;
+  option2:string;
+  option3:string;
+  option4:string;
 }
 @Entity()
 export class OrderItem extends CoreEntity{
   @ManyToOne(
-    () => Robot,
-    
+    () => Product,
     {nullable: true, onDelete: 'CASCADE'}
   )
   
-  robot: Robot;
+  product: Product;
  
   @Column({type: 'json', nullable: true} )
-  options: RobotOption;
+  options: ProductOption;
   
   @OneToMany(
     () => Order,

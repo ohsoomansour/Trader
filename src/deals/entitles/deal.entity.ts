@@ -4,7 +4,7 @@ import { CoreEntity } from "src/common/entities/core.entity";
 import { Member } from "src/member/entities/member.entity";
 import { Order } from "src/orders/entities/order.entity";
 import {Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
-import { Robot } from "./robot.entity";
+import { Product } from "./product.entity";
 import { Store } from "src/orders/entities/store.entity";
 
 @Entity()
@@ -31,10 +31,10 @@ export class Deal extends CoreEntity {
   @Column({nullable: true})
   seller_address:string;
   //Robot가 삭제될 때 관련된 자식 엔티티(여기서는 Deal)도 함께 삭제
-  @ManyToOne(() => Robot, {onDelete: 'CASCADE'})
-  robot: Robot;
-  @RelationId((deal: Deal) => deal.robot)
-  robotId: number;
+  @ManyToOne(() => Product, {onDelete: 'CASCADE'})
+  porduct: Product;
+  @RelationId((deal: Deal) => deal.porduct)
+  productId: number;
   
   @OneToMany(
     () => Order,

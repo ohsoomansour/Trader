@@ -19,6 +19,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { CupdateMemberInfoDTO } from './dtos/updateMember.dto';
 import { CreateMemberOutputDTO } from './dtos/regMember.dto';
 import { CheckingPwDTO } from './dtos/checkingPw.dto';
+import { LoginOutputDTO } from './dtos/login.dto';
 
 //import { LoginOutputDTO } from './dtos/login.dto';
 /*#SESSION  COOKIE란? 
@@ -89,9 +90,10 @@ export class MemberController {
   //로그인 버튼을 누르면 홈으로 이동
   @Post('/login')
   @Role(['any'])
-  @UseGuards(AuthGuard)
-  async logIn(@Req() req: Request, @Res() res: Response): Promise<void> {
+  @UseGuards(AuthGuard)   //@Res() res: Response
+  async logIn(@Req() req: Request): Promise<LoginOutputDTO> {
     try {
+      this.logger.log("password test");
       const result = await this.memberService.login(req.body);
 
       if (result.ok) {
@@ -110,7 +112,9 @@ export class MemberController {
         //#로그인 후 활동 추적
         await this.memberService.trackUserActivity(req.body.userId);
 
-        res.status(HttpStatus.OK).send(result);
+        return result;
+      } else {
+        return result;
       }
     } catch (e) {
       console.error(e);

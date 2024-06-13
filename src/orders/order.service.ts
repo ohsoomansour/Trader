@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 import { OrderInputDTO, OrderOutputDTO } from "./dtos/order.dto";
 import { Member } from "src/member/entities/member.entity";
 import { Deal } from "src/deals/entitles/deal.entity";
-import { Robot } from "src/deals/entitles/robot.entity";
+import { Product } from "src/deals/entitles/product.entity";
 import { OrderItem } from "./entities/order-item.entity";
 import { Store } from "./entities/store.entity";
 import { GetOrderOutputDTO } from "./dtos/get-order.dto";
@@ -34,8 +34,8 @@ export class OrderService {
     private readonly deals: Repository<Deal>,
     @InjectRepository(Member)
     private readonly members: Repository<Member>,
-    @InjectRepository(Robot)
-    private readonly robots: Repository<Robot>,
+    @InjectRepository(Product)
+    private readonly robots: Repository<Product>,
     @InjectRepository(OrderItem)
     private readonly orderitems: Repository<OrderItem>,
     @InjectRepository(Store)
@@ -51,13 +51,13 @@ export class OrderService {
           id: orderInput.dealId
         }
       })
-      const robot = await this.robots.findOne({
+      const product = await this.robots.findOne({
         where:{
-          id: orderInput.items.robot.id,
+          id: orderInput.items.product.id,
         }
       })
       const orderitem = this.orderitems.create({
-        robot,
+        product,
         options: orderInput.items.options
       },)
       await this.orderitems.save(orderitem)
@@ -109,7 +109,7 @@ export class OrderService {
         seller:true,
         customer:true,
         items:{
-          robot:true,
+          product:true,
         }
       },
       skip:(page - 1) *  3,
@@ -149,7 +149,7 @@ export class OrderService {
         relations:{
           deal:true,
           items:{
-            robot: true,
+            product: true,
           },
           customer:true
         },
@@ -244,7 +244,7 @@ export class OrderService {
       },
       relations:{
         deal:{
-          robot:true,
+          porduct:true,
           seller:true,
         },
         member:true

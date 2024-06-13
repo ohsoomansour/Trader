@@ -3,13 +3,19 @@ import { CoreEntity } from "src/common/entities/core.entity";
 import { Column, Entity} from "typeorm";
 
 @Entity()
-export class Robot extends CoreEntity{
+export class Product extends CoreEntity{
   @Column({nullable:true})
   name:string;
 
   @Column({nullable:true})
   price: number;
-
+  /*
+  @Column({nullable: true})
+  option1: string;
+  
+  @Column({nullable:true})
+  optino2: string;
+  */
   @Column({nullable: true})
   maintenance_cost: number;
 
@@ -20,7 +26,7 @@ export class Robot extends CoreEntity{
   rb3D_glb : Buffer;  
   */
   @Column({nullable:true})
-  rbURL : string;
+  productURL : string;
 
   
   
