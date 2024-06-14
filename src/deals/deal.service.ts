@@ -5,9 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Deal } from "./entitles/deal.entity";
 import { Repository } from "typeorm";
 import { Member } from "src/member/entities/member.entity";
-import { Product
-
- } from "./entitles/product.entity";
+import { Product } from "./entitles/product.entity";
 import { MakeADealInputDTO } from "./dtos/make-deal.dto";
 
 @Injectable()

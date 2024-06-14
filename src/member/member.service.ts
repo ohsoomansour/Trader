@@ -91,7 +91,7 @@ export class MemberService {
       //이 아이디가 존재 하는 지 검사 필요
       const idExist = await this.members.findOne({ where: { userId } });
       if (idExist) {
-        return { ok: false, error: 'The ID already exists' };
+        return { ok: false, error: 'The ID already exists'};
       }
 
       const user = await this.members.save(

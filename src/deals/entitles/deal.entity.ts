@@ -33,7 +33,8 @@ export class Deal extends CoreEntity {
   //Robot가 삭제될 때 관련된 자식 엔티티(여기서는 Deal)도 함께 삭제
   @ManyToOne(() => Product, {onDelete: 'CASCADE'})
   product: Product;
-  @RelationId((deal: Deal) => deal.product)
+  @RelationId((deal: Deal) => deal.product) //you need to specify target relation
+
   productId: number;
   
   @OneToMany(
