@@ -28,7 +28,8 @@ export class DealService {
     console.log("sellMember",sellMember);
     const newProduct = this.products.create({
       name:makingDealInput.name,
-      price:makingDealInput.price,    
+      price:makingDealInput.price,
+      options:makingDealInput.options,    
       maintenance_cost:makingDealInput.maintenance_cost,    
       description:makingDealInput.description,
       productURL:makingDealInput.productURL

@@ -1,18 +1,29 @@
 /* eslint-disable prettier/prettier */
 
+export class optionParts{
+  optPart_idx: string;
+  part_name:string;
+  price: number;
+};
 
-//compa_name, compaBrand_ImgURL, sellerId, salesManager_mobilephone, seller_address, name, price, maintenance_cost, description, rbURL
+export class options{
+  option_index : number;
+  option_title : string;
+  option_parts : optionParts[];
+};
+
 export class MakeADealInputDTO  {
-  compa_name:string;
-  compaBrand_ImgURL:string;
-  mobile_phone:string;
-  sellerId:string;
-  salesManager_mobilephone:string;
-  seller_address:string;
-  name:string;
-  price:number;
-  maintenance_cost:number;
-  description:string;
-  productURL:string;
+  compa_name : string;
+  compaBrand_ImgURL : string;
+  mobile_phone : string;
+  sellerId : string;
+  salesManager_mobilephone : string;
+  seller_address : string;
+  name : string; 
+  price : number;
+  options : options[];
+  maintenance_cost : number;
+  description : string;
+  productURL : string;
 }
 
