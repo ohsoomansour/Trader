@@ -3,7 +3,7 @@ import { Length } from "class-validator";
 import { CoreEntity } from "src/common/entities/core.entity";
 import { Member } from "src/member/entities/member.entity";
 import { Order } from "src/orders/entities/order.entity";
-import {Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
+import {Column, Entity, ManyToOne, OneToMany, OneToOne, RelationId } from "typeorm";
 import { Product } from "./product.entity";
 import { Store } from "src/orders/entities/store.entity";
 
@@ -31,6 +31,7 @@ export class Deal extends CoreEntity {
   @Column({nullable: true})
   seller_address:string;
   //Robot가 삭제될 때 관련된 자식 엔티티(여기서는 Deal)도 함께 삭제
+  //ManyToOne
   @ManyToOne(() => Product, {onDelete: 'CASCADE'})
   product: Product;
   @RelationId((deal: Deal) => deal.product) //you need to specify target relation

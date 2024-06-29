@@ -25,11 +25,12 @@ export class DealService {
     this.logger.log('makeADeal') //undefined
     console.log("makingDealInput.sellerId", makingDealInput.sellerId)
     const sellMember = await this.members.findOne({where: {userId: makingDealInput.sellerId}})
-    console.log("sellMember",sellMember);
+
     const newProduct = this.products.create({
       name:makingDealInput.name,
       price:makingDealInput.price,
-      options:makingDealInput.options,    
+      options:makingDealInput.options, 
+      maintOpYN: makingDealInput.maintOpYN,   
       maintenance_cost:makingDealInput.maintenance_cost,    
       description:makingDealInput.description,
       productURL:makingDealInput.productURL
@@ -61,10 +62,11 @@ export class DealService {
           product: true,
           seller:true,
         },
+        /*
         cache:{
           id:'getAllDeal_cache',
           milliseconds:6000,
-        }
+        }*/
       })
       return allDeals;
     } catch (e) {

@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { booleanValue } from "aws-sdk/clients/finspace";
 import { CoreEntity } from "src/common/entities/core.entity";
 import { Column, Entity} from "typeorm";
 
@@ -30,6 +31,9 @@ export class Product extends CoreEntity{
   @Column({nullable:true, type:'json'})
   options:options[];
   
+  @Column({nullable: false})
+  maintOpYN: boolean;
+
   @Column({nullable: true})
   maintenance_cost: number;
 
