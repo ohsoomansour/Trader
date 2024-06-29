@@ -45,7 +45,7 @@
   📄 4-2)서버에 연결 방법 : *2023.12.20 기록  
    > pgAdmin 열기 >  > [Add New server] 또는 상위 Object 탭 > create > server
       - [General 탭] : 
-      - ⭐[connection]탭 > hostname: localhost > port:5432 > Maintenanace database: postgres
+      - [connection]탭 > hostname: localhost > port:5432 > Maintenanace database: postgres
       - Username: postgres(default)  
       - password: 284823 
    > Database우클릭, Create > Database: 🔹nuber-eats > Owner: ohsoomansour  "여기서 사용자를 변경 할 수있다. "
