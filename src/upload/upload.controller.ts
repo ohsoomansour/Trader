@@ -41,11 +41,12 @@ const BUCKET_NAME = 'goodganglabs3';
 export class UploadController {
   constructor(private configService: ConfigService) {}
  /** 
-   * @Author: osooman
-   * @Param: 인터셉터를 통해서 '파일'을 가져온다.
-   * @Function: AWS S3 bucket에 업로드하고 url을 생성한다.
+   * @Author osooman
+   * @Param 인터셉터를 통해서 '파일'을 가져온다.
+   * @Function AWS S3 bucket에 업로드하고 url을 생성한다. 그리고 cloudfront를 사용하여 origin server 
    * @return: url
-   * @Explain: 회사 이미지 및 로봇 상품 동영상 파일을 업로드할 때 uploadFile 함수가 실행된다.
+   * @Explain 회사 이미지 및 로봇 상품 동영상 파일을 업로드할 때 uploadFile 함수가 실행된다.
+   * @추가지식 : FilesInterceptor('files', 10),  @UploadedFiles()
    */
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
@@ -60,7 +61,7 @@ export class UploadController {
       },
     });
     try {
-      //const objectName = `${Date.now() + file.originalname}`;
+      //원래는 const objectName = `${Date.now() + file.originalname}`; 이건데 
       const objectName = `${'_' + file.originalname}`;
       const regionName = 'ap-northeast-2';
       await new AWS.S3()
@@ -71,7 +72,9 @@ export class UploadController {
           ACL: 'public-read', //허용 범위
         })
         .promise(); //aws-sdk  사용하는 방법 정도라고 생각
-      const url = `https://${BUCKET_NAME}.s3.${regionName}.amazonaws.com/${objectName}`;
+      // 오리진 서버 -> const url = `https://${BUCKET_NAME}.s3.${regionName}.amazonaws.com/${objectName}`;
+      const url = `https://${"d191a2uwhlebxo.cloudfront.net"}/${objectName}`  //클라우드 프론트 
+    
       return { url };
     } catch (e) {
       console.error(e);
