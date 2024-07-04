@@ -25,28 +25,44 @@
    > 아시아 태평양(서울): ap-northeast-2
    > Amazon S3 관리형 키(SSE-S3)를 사용한 서버 측 암호화 선택
   */
+/** 
+ @ConfigService설명 : Get a configuration value (either custom configuration or process environment variable)
+ @Multer : NestJS에서 파일 업로드를 처리하기 위해서 multer 미들웨어를 사용, 주로 파일 업로드에 사용되는 multipart/form-data를 처리하기 위한 
+           middleware
+
+*/
 import * as AWS from 'aws-sdk';
 import {
+  Body,
   Controller,
+  Delete,
+  Logger,
   Post,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { UploadService } from './upload.service';
+import { DelFileInputDTO } from './dtos/del-file';
 
 const BUCKET_NAME = 'goodganglabs3';
 
 @Controller('upload')
 export class UploadController {
-  constructor(private configService: ConfigService) {}
+  private logger = new Logger('UploadController');
+
+  constructor(
+    private configService: ConfigService,
+    private uploadService: UploadService,
+  ) {}
  /** 
    * @Author osooman
    * @Param 인터셉터를 통해서 '파일'을 가져온다.
    * @Function AWS S3 bucket에 업로드하고 url을 생성한다. 그리고 cloudfront를 사용하여 origin server 
    * @return: url
    * @Explain 회사 이미지 및 로봇 상품 동영상 파일을 업로드할 때 uploadFile 함수가 실행된다.
-   * @추가지식 : FilesInterceptor('files', 10),  @UploadedFiles()
    */
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
@@ -61,8 +77,8 @@ export class UploadController {
       },
     });
     try {
-      //원래는 const objectName = `${Date.now() + file.originalname}`; 이건데 
-      const objectName = `${'_' + file.originalname}`;
+      //원래는 file.originalname 
+      const objectName = `${'_'  + file.originalname}`; // ex) _appleLOGO.png
       const regionName = 'ap-northeast-2';
       await new AWS.S3()
         .putObject({
@@ -81,4 +97,52 @@ export class UploadController {
       return null;
     }
   }
+  /** 
+   * @Author osooman
+   * @Param 인터셉터를 통해서 '파일들'을 가져온다.
+   * @Function AWS S3 bucket에 업로드하고 url을 생성한다. 그리고 cloudfront를 사용하여 origin server 
+   * @return: 다수의 cloudfront url들  
+   * @Explain 회사 이미지 및 로봇 상품 동영상 파일을 업로드할 때 uploadFile 함수가 실행된다.
+   * @추가지식 : FilesInterceptor('files', 10),  @UploadedFiles()
+   */
+  @Post('/multi_files')
+  @UseInterceptors(FilesInterceptor('files', 10))  // 최대 파일 수:10
+  async uploadFiles(@UploadedFiles() files : Express.Multer.File[]): Promise<string[]> {
+    console.log('/multi_files files', files);
+    const imgsUrl:string[] = [];
+    
+    await Promise.all(
+      files.map(async( file : Express.Multer.File ) => {
+      const url = await this.uploadService.uploadImages(file);
+      imgsUrl.push(url);
+      })
+
+    )
+    return imgsUrl;
+
+  }
+
+  /** 
+   * @Author osooman
+   * @Param : Bucket 이름과 key (object 이름)
+   *  - 프론트 : [파일의 name1, 파일의 name2 ... ] -> _기준으로 잘라서 -> key / BUCKET : 이 핸들러에서 지정 
+   * @Function : 넘겨 받은 해당 파일의 오브젝트를 삭제한다. 
+   * @return: 
+   * @Explain : 자기 상품 관리 페이지, mydeal : 서버 delImgs 핸들러 -> aws s3 버킷에서 삭제 
+   * @추가지식 : FilesInterceptor('files', 10),  @UploadedFiles()
+   */
+
+  @Post('/del')
+  async deleteFile(@Body() delFileInputDto : DelFileInputDTO)  {
+    try {
+      this.logger.log(delFileInputDto.file_names)
+      return await this.uploadService.deleteImage(delFileInputDto.file_names);
+      
+      
+    } catch (err){
+      console.error(err);
+    }
+    
+  }
+
 }
