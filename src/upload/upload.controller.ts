@@ -142,6 +142,5 @@ export class UploadController {
     } catch (err){
       console.error(err);
     }
-    
   }
 }
