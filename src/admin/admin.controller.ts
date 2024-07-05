@@ -101,7 +101,6 @@ export class AdminController {
   ) {
     return this.adminService.editProfile(id, memberInfo);
   }
-
   /**
    * @Author : OSOOMAN
    * @Date : 2024.1.6
