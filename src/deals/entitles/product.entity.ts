@@ -43,15 +43,12 @@ export class Product extends CoreEntity{
   @Column({nullable:true, type: 'bytea'})
   rb3D_glb : Buffer;  
   */
+ 
   @Column({nullable:true})
-  productURL : string;
+  representative_prodURL : string; //representative_prodURL
 
-  
-  
-  
-
+  @Column({nullable:true, type: 'json'})
+  prod_URLS : string[];
   
 
-  
-    
 }

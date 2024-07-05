@@ -25,6 +25,7 @@ export class MakeADealInputDTO  {
   maintOpYN: boolean;
   maintenance_cost : number;
   description : string;
-  productURL : string;
+  representative_prodURL : string;
+  prod_URLS: string[];
 }
 

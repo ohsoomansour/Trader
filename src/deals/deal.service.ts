@@ -27,13 +27,14 @@ export class DealService {
     const sellMember = await this.members.findOne({where: {userId: makingDealInput.sellerId}})
 
     const newProduct = this.products.create({
-      name:makingDealInput.name,
-      price:makingDealInput.price,
-      options:makingDealInput.options, 
-      maintOpYN: makingDealInput.maintOpYN,   
-      maintenance_cost:makingDealInput.maintenance_cost,    
-      description:makingDealInput.description,
-      productURL:makingDealInput.productURL
+      name : makingDealInput.name,
+      price : makingDealInput.price,
+      options : makingDealInput.options, 
+      maintOpYN : makingDealInput.maintOpYN,   
+      maintenance_cost : makingDealInput.maintenance_cost,    
+      description : makingDealInput.description,
+      representative_prodURL : makingDealInput.representative_prodURL,
+      prod_URLS : makingDealInput.prod_URLS
     })
 
     await this.products.save(newProduct);

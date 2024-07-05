@@ -1,9 +1,6 @@
-import { Body, Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as AWS from 'aws-sdk';
-import { DeleteObjectCommand, S3, S3Client } from "@aws-sdk/client-s3";
-
-
 
 
 @Injectable()
@@ -34,8 +31,6 @@ export class UploadService {
       Body: file.buffer
     };
     
-
-
     const url : string = `https://${"d191a2uwhlebxo.cloudfront.net"}/${objectName}`  //클라우드 프론트 url
     return new Promise((resolve, reject) => {
       new AWS.S3().putObject(params, (err, data) => {
