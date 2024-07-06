@@ -1,5 +1,5 @@
 # dotenv environment variable files
-.env.dev
+#.env.dev
 
 # compiled output
 /dist
