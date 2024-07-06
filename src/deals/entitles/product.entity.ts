@@ -31,7 +31,7 @@ export class Product extends CoreEntity{
   @Column({nullable:true, type:'json'})
   options:options[];
   
-  @Column({nullable: false})
+  @Column({nullable: true})
   maintOpYN: boolean;
 
   @Column({nullable: true})
