@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Product } from 'src/deals/entitles/product.entity';
+
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Order } from './order.entity';
+import { Product } from 'src/product/entity/product.entity';
 
 export class ProductOption {
   maintenanceYN:boolean;

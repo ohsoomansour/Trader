@@ -8,7 +8,8 @@ import { Member } from 'src/member/entities/member.entity';
 import { OrderService } from './order.service';
 import { OrderItem } from './entities/order-item.entity';
 import { Store } from './entities/store.entity';
-import { Product } from 'src/deals/entitles/product.entity';
+import { Product } from 'src/product/entity/product.entity';
+
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, OrderItem, Product, Deal, Member, Store])],

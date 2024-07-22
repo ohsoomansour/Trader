@@ -1,3 +1,5 @@
 export class DelFileInputDTO {
-  file_names: string[];
+  imgToDel: string;
+  productId: number;
+  code:string;
 }

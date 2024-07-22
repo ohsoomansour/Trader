@@ -179,12 +179,13 @@ import { Deal } from './deals/entitles/deal.entity';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
 import { DealModule } from './deals/deal.module';
-import { Product } from './deals/entitles/product.entity';
+import { Product } from './product/entity/product.entity';
 import { OrderModule } from './orders/order.module';
 import { Store } from './orders/entities/store.entity';
 import { PhoneValidationModule } from './mobile-phone.ts/mobilephone-validatiton.module';
 import { CommentModule } from './comment/comment.module';
 import { Comment } from './comment/entities/comment.entity';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -232,7 +233,8 @@ import { Comment } from './comment/entities/comment.entity';
     OrderModule,
     DealModule,
     PhoneValidationModule,
-    CommentModule
+    CommentModule,
+    ProductModule
     /*#JwtModule등록 방법2.
     JwtModule.registerAsync({
       imports: [ConfigModule],

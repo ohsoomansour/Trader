@@ -50,5 +50,4 @@ export class Product extends CoreEntity{
   @Column({nullable:true, type: 'json'})
   prod_URLS : string[];
   
-
 }

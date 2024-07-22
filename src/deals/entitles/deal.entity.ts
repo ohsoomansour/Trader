@@ -4,7 +4,7 @@ import { CoreEntity } from "src/common/entities/core.entity";
 import { Member } from "src/member/entities/member.entity";
 import { Order } from "src/orders/entities/order.entity";
 import {Column, Entity, ManyToOne, OneToMany, OneToOne, RelationId } from "typeorm";
-import { Product } from "./product.entity";
+import { Product } from "../../product/entity/product.entity";
 import { Store } from "src/orders/entities/store.entity";
 
 @Entity()

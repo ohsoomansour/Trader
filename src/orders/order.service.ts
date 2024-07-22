@@ -6,13 +6,14 @@ import { Repository } from "typeorm";
 import { OrderInputDTO, OrderOutputDTO } from "./dtos/order.dto";
 import { Member } from "src/member/entities/member.entity";
 import { Deal } from "src/deals/entitles/deal.entity";
-import { Product } from "src/deals/entitles/product.entity";
-import { OrderItem } from "./entities/order-item.entity";
-import { Store } from "./entities/store.entity";
-import { GetOrderOutputDTO } from "./dtos/get-order.dto";
-import { TakeOrderOutput } from "./dtos/take-order.dto";
-import { StoreGoodsInputDTO } from "./dtos/store-goods.dto";
-import { GetStoredGoodsOutputdDTO } from "./dtos/get-storedgoods.dto";
+
+import {OrderItem } from "./entities/order-item.entity";
+import {Store } from "./entities/store.entity";
+import {GetOrderOutputDTO } from "./dtos/get-order.dto";
+import {TakeOrderOutput } from "./dtos/take-order.dto";
+import {StoreGoodsInputDTO } from "./dtos/store-goods.dto";
+import {GetStoredGoodsOutputdDTO } from "./dtos/get-storedgoods.dto";
+import {Product} from "src/product/entity/product.entity";
 
 export enum OrderStatus  {
   Pending = "Pending",

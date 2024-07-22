@@ -6,7 +6,7 @@ import { DealController } from './deal.controller';
 import { OrderItem } from 'src/orders/entities/order-item.entity';
 import { DealService } from './deal.service';
 import { Deal } from './entitles/deal.entity';
-import { Product} from './entitles/product.entity';
+import { Product} from '../product/entity/product.entity';
 import { Member } from 'src/member/entities/member.entity';
 import { Store } from 'src/orders/entities/store.entity';
 

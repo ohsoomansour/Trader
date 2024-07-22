@@ -67,7 +67,9 @@ export class UploadController {
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file) {
-    console.log(file);
+    this.logger.log('uploadFile controller:');
+    console.log(file)
+
     AWS.config.update({
       region: 'ap-northeast-2',
       credentials: {
@@ -78,7 +80,7 @@ export class UploadController {
     });
     try {
       //원래는 file.originalname 
-      const objectName = `${'_'  + file.originalname}`; // ex) _appleLOGO.png
+      const objectName = `${'_'  + file.originalname}`; // ex) _appleLOGO.png 또는 _appleLOGO.jpeg
       const regionName = 'ap-northeast-2';
       await new AWS.S3()
         .putObject({
@@ -135,9 +137,8 @@ export class UploadController {
   @Post('/del')
   async deleteFile(@Body() delFileInputDto : DelFileInputDTO)  {
     try {
-      this.logger.log(delFileInputDto.file_names)
-      return await this.uploadService.deleteImage(delFileInputDto.file_names);
-      
+      this.logger.log(delFileInputDto.imgToDel)
+      return await this.uploadService.deleteImage(delFileInputDto);
       
     } catch (err){
       console.error(err);
