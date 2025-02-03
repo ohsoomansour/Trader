@@ -34,7 +34,7 @@ export class UploadService {
       Key: objectName,
       Body: file.buffer
     };
-    const url : string = `https://${"d191a2uwhlebxo.cloudfront.net"}/${objectName}`  //클라우드 프론트 url
+    //const url : string = `https://${"d191a2uwhlebxo.cloudfront.net"}/${objectName}`  //클라우드 프론트 url
     return new Promise((resolve, reject) => {
       new AWS.S3().putObject(params, (err, data) => {
         if(err) reject(err);
@@ -70,7 +70,7 @@ export class UploadService {
         
       });
       //DB에서 url 삭제
-      const dbURL = `https://d191a2uwhlebxo.cloudfront.net/${delFileInputDto.imgToDel}`
+      //const dbURL = `https://d191a2uwhlebxo.cloudfront.net/${delFileInputDto.imgToDel}`
       if(delFileInputDto.code === 'r'){
         this.logger.log('del representatibve product');
         await this.producService.delRepresImg(delFileInputDto.productId);

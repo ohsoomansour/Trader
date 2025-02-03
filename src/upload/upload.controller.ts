@@ -91,7 +91,7 @@ export class UploadController {
         })
         .promise(); //aws-sdk  사용하는 방법 정도라고 생각
       // 오리진 서버 -> const url = `https://${BUCKET_NAME}.s3.${regionName}.amazonaws.com/${objectName}`;
-      const url = `https://${"d191a2uwhlebxo.cloudfront.net"}/${objectName}`  //클라우드 프론트 
+      //const url = `https://${"d191a2uwhlebxo.cloudfront.net"}/${objectName}`  //클라우드 프론트 
     
       return { url };
     } catch (e) {
